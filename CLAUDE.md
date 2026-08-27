@@ -111,7 +111,11 @@ the live site first and show the numbers.**
 | Header block total | `126px` |
 | Logo | `98x34` inside a `143x84` cell, padding `25/35/25/10` |
 | Utility list offset | `margin: 0 -20px` so the first icon sits at x=45 |
-| Nav items | Montserrat `16px/600/28px`, item height 28 |
+| Nav items | Montserrat `16px/600/28px`, item height 28, 32px between |
+| Nav positions @1440 | Home x764 w50 · About Us x846 w76 · Services x954 w94 · Our Work x1081 w80 |
+| Nav to CTA gap | `60px` (>1366) / `15px` (<=1366) |
+| Services arrow | `1em` glyph behind a `10px` gap — this is what makes the item 94px, not 86px |
+| Header inline padding | `20px` (>1366) / `15px` (<=1366) |
 | Get A Quote | `174x57`, padding `19px 30px`; `10px 20px` at <=1366 |
 | Hero box | `1440x600`, top 31, `min-height: 600px` |
 | Hero corner | `border-radius: 0 0 250px 0` |

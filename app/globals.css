@@ -169,6 +169,11 @@ h3 {
 
 .aaw-section {
   padding-block: var(--aaw-section);
+  /* A right-direction reveal sits translated outside the container until it
+     fires, which would widen the page. `clip` contains that without creating a
+     scroll container, so the sticky header and the cards' overhanging numbers
+     are both unaffected. */
+  overflow-x: clip;
 }
 
 /* ==========================================================================
@@ -309,6 +314,9 @@ h3 {
   flex: 1;
   justify-content: flex-end;
   gap: 60px;
+  /* Live leaves 60px between the last nav item and Get A Quote; the header
+     flex gap supplies 20 of it, this supplies the remaining 40. */
+  padding-right: 40px;
 }
 
 .aaw-nav > ul {
@@ -533,9 +541,15 @@ h3 {
   cursor: pointer;
 }
 
+/* Live's sub-arrow is a 1em glyph behind 10px of padding, which is what makes
+   the Services item 94px wide rather than 86px. */
+.aaw-nav-trigger {
+  gap: 10px;
+}
+
 .aaw-nav-trigger > svg {
-  width: 0.7em;
-  height: 0.7em;
+  width: 1em;
+  height: 1em;
   fill: currentColor;
   transition: transform 0.3s;
 }
@@ -817,15 +831,27 @@ h3 {
     padding: 10px 20px;
   }
 
+  /* Live drops the header container's inline padding from 20px to 15px here,
+     and closes the nav-to-CTA distance from 60px to 15px. */
+  .aaw-header > .aaw-shell {
+    padding-inline: 15px;
+  }
+
+  .aaw-header-inner {
+    gap: 15px;
+  }
+
   .aaw-nav {
     gap: 15px;
+    padding-right: 0;
   }
 
   .aaw-nav ul {
     gap: 25px;
   }
 
-  .aaw-nav a {
+  .aaw-nav a,
+  .aaw-nav-trigger {
     font-size: 15px;
     line-height: 25px;
   }
