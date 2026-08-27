@@ -93,7 +93,7 @@ fs.cpSync(DIST, OUT, { recursive: true });
 html = html
   .replace(/"\/assets\//g, '"./assets/')
   .replace(/"\/favicon\.svg"/g, '"./favicon.svg"')
-  .replace(/"\/(tire-wheel-[a-z]+\.jpg)"/g, '"./$1"');
+  .replace(/"\/(tire-wheel-[a-z-]+\.(?:jpg|png|webp))"/g, '"./$1"');
 
 fs.writeFileSync(path.join(OUT, "index.html"), html);
 
@@ -105,7 +105,7 @@ for (const f of fs.readdirSync(assetsDir)) {
   const before = src;
 
   if (f.endsWith(".css")) {
-    src = src.replace(/url\(\/(tire-wheel-[a-z]+\.jpg)\)/g, "url(../$1)");
+    src = src.replace(/url\(\/(tire-wheel-[a-z-]+\.(?:jpg|png|webp))\)/g, "url(../$1)");
   }
 
   if (f.endsWith(".js")) {

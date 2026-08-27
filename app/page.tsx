@@ -176,7 +176,18 @@ export default function TireAndWheelServicePage() {
         </section>
 
         {/* 3 — Primary service list ---------------------------------------- */}
-        <section className="aaw-section aaw-dark">
+        <section className="aaw-section aaw-dark aaw-dark--wheel">
+          {/* Decorative: sits in the left gutter, behind the card grid. */}
+          <img
+            className="aaw-section-wheel"
+            src="/tire-wheel-cutout.webp"
+            alt=""
+            aria-hidden="true"
+            width={478}
+            height={492}
+            loading="lazy"
+            data-reveal="left"
+          />
           <div className="aaw-shell">
             <div className="aaw-head">
               <h2>Our Tire And Wheel Services</h2>

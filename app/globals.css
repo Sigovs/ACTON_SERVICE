@@ -985,6 +985,35 @@ h3 {
   position: relative;
 }
 
+/* Decorative wheel in the left gutter of the services band. It is clipped by
+   the section rather than allowed to widen the page, sits above the 0.9
+   overlay but below the card grid, and is centred with the independent
+   `translate` property so the reveal's `transform` stays free. */
+.aaw-dark--wheel {
+  overflow: hidden;
+}
+
+.aaw-section-wheel {
+  position: absolute;
+  z-index: 0;
+  /* Sits high enough that its top third reads in the open band beside the
+     section heading; the rest passes behind the card grid. */
+  top: 130px;
+  left: clamp(-150px, calc(50% - 745px), 24px);
+  width: clamp(260px, 26vw, 430px);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Below this the two-up grid fills the container and there is no gutter left
+   to hold it without crowding the cards. */
+@media (max-width: 1199px) {
+  .aaw-section-wheel {
+    display: none;
+  }
+}
+
 .aaw-dark h2,
 .aaw-dark h3 {
   color: var(--aaw-white);
