@@ -2407,6 +2407,11 @@ h3 {
    stream still reads as one system rather than seven unrelated blocks. */
 .aaw-euro-chapter[data-tone="graphite"] {
   position: relative;
+  /* Required, not cosmetic. The band below is a `z-index: -1` pseudo, and
+     nothing between here and <html> creates a stacking context, so without
+     this it drops into the root's negative layer and `.aaw-euro-hub`'s white
+     background paints straight over it — leaving white text on white. */
+  isolation: isolate;
   border-top: 0;
   color: var(--aaw-on-dark);
   padding-inline: 40px;
