@@ -2009,6 +2009,19 @@ h3 {
   font-size: 16px;
   font-weight: 600;
   line-height: 28px;
+  transition: border-color 0.3s;
+}
+
+/* The rows are not links, so this is affordance only. It borrows the site's
+   own hover grammar — the inversion the buttons and dropdown links use — and
+   applies it to the icon tile rather than inventing a second one. */
+.aaw-ledger-list li:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.55);
+}
+
+.aaw-ledger-list li:hover .aaw-symbol[data-tone="ledger"] {
+  background: var(--aaw-tint);
+  color: var(--aaw-primary);
 }
 
 .aaw-ledger-list .aaw-symbol {
@@ -2020,6 +2033,7 @@ h3 {
 .aaw-symbol[data-tone="ledger"] {
   background: rgba(255, 255, 255, 0.12);
   color: var(--aaw-white);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .aaw-ledger-list .aaw-symbol .material-symbols-sharp {
