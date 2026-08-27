@@ -102,9 +102,10 @@ Key content groups:
 
 - Explicitly no onsite auto-body facility
 - Coordination through trusted partner shops
-- Collision support and insurance coordination
-- Vintage/classic European restoration through partners
-- Paintless dent removal, touch-up, detail, ceramic coating, tint, protective film
+- Collision support: written estimates, drop-off and pickup, coordinating the repair
+- Vintage/classic European restoration through two partner restoration shops
+- Related body and protection services: paintless dent removal, winterization,
+  rust prevention, undercoating, lubrication
 - Four FAQs
 - Appointment CTA
 
@@ -116,8 +117,10 @@ Source: `docs/content/06-transmission.md`
 
 Key content groups:
 
-- Transmission service, repair, replacement, fluid, flush, clutch work
-- Warning signs such as noises, shift difficulty, sticking, and fluid discoloration
+- Transmission inspection, diagnostics, repair and replacement, fluid service,
+  filter replacement, clutch replacements and upgrades
+- Warning signs: strange noises, difficulty changing gears, sticking in gear,
+  and fluid leaking underneath
 - European specialization plus service for most makes/models
 - Four FAQs
 - Appointment CTA
