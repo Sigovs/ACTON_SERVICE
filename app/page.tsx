@@ -214,6 +214,15 @@ export default function TireAndWheelServicePage() {
         <section className="aaw-section aaw-pattern aaw-pattern--alt2">
           <div className="aaw-shell">
             <div className="aaw-head">
+              <img
+                className="aaw-seasons-figure"
+                src="/seasonal-tires.webp"
+                alt="Three stacked tires showing different tread patterns."
+                width={536}
+                height={433}
+                loading="lazy"
+                data-reveal="up"
+              />
               <h2 data-reveal="left" data-reveal-text>Summer, All-Season, And Winter Tires</h2>
               <p>
                 Different driving needs call for different tires. Here is how the
@@ -235,10 +244,10 @@ export default function TireAndWheelServicePage() {
 
         {/* 5 — Alignment ---------------------------------------------------- */}
         <section className="aaw-section aaw-pattern aaw-pattern--alt">
-          <div className="aaw-shell aaw-split aaw-split--reverse">
+          <div className="aaw-shell aaw-split">
             <div className="aaw-split-copy">
               <div className="aaw-head aaw-head--start">
-                <h2 data-reveal="right" data-reveal-text>Why An Alignment Matters</h2>
+                <h2 data-reveal="left" data-reveal-text>Why An Alignment Matters</h2>
               </div>
               <p>
                 A wheel alignment keeps your steering true and can meaningfully
@@ -265,41 +274,45 @@ export default function TireAndWheelServicePage() {
                 </a>
               </div>
             </div>
-            <figure className="aaw-split-figure" data-reveal="left">
+            <figure
+              className="aaw-split-figure aaw-split-figure--cutout"
+              data-reveal="right"
+            >
               <img
-                src="/tire-wheel-alignment.jpg"
-                alt="Acton Autowerks technician fitting alignment target heads to the wheel of a blue Porsche 911 on the alignment rack."
-                width={1672}
-                height={941}
+                src="/alignment-target.webp"
+                alt="An alignment target head clamped to a wheel, as used to measure and set wheel alignment."
+                width={594}
+                height={452}
                 loading="lazy"
               />
             </figure>
           </div>
         </section>
 
-        {/* 6 — Trust -------------------------------------------------------- */}
-        <section className="aaw-section aaw-pattern">
-          <div className="aaw-shell">
-            <div className="aaw-trust">
-              <div className="aaw-trust-figure">
+        {/* 6 — Trust: full-bleed photographic band -------------------------- */}
+        <section className="aaw-trustband">
+          <div className="aaw-shell aaw-trustband-inner">
+            <div className="aaw-trustband-copy">
+              <div className="aaw-trustbadge" data-reveal="up">
+                {/* Ring draws itself once on reveal, like a loader completing. */}
+                <svg className="aaw-trustbadge-ring" viewBox="0 0 240 240" aria-hidden="true">
+                  <circle className="aaw-trustbadge-track" cx="120" cy="120" r="117" />
+                  <circle className="aaw-trustbadge-arc" cx="120" cy="120" r="117" />
+                </svg>
                 <strong>20+</strong>
                 <span>Years combined experience</span>
               </div>
-              <div className="aaw-trust-copy">
-                <MaterialSymbol name={SYMBOLS.trust} tone="plain" />
-                <h2 data-reveal="right" data-reveal-text>Why New England Drivers Trust Us</h2>
-                <p>
-                  With over 20 years of combined experience, our team has earned
-                  a reputation across MetroWest and New England for our
-                  expertise with European vehicles, straightforward advice and
-                  quality work.
-                </p>
-                <p>
-                  Whether you are here for a set of tires today or ongoing
-                  maintenance and service down the road, we will treat your
-                  vehicle like our own.
-                </p>
-              </div>
+              <h2 data-reveal="up">Why New England Drivers Trust Us</h2>
+              <p data-reveal="up" data-reveal-delay="1">
+                With over 20 years of combined experience, our team has earned a
+                reputation across MetroWest and New England for our expertise
+                with European vehicles, straightforward advice and quality work.
+              </p>
+              <p data-reveal="up" data-reveal-delay="2">
+                Whether you’re here for a set of tires today or ongoing
+                maintenance and service down the road, we’ll treat your vehicle
+                like our own.
+              </p>
             </div>
           </div>
         </section>

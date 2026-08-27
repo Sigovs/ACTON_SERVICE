@@ -7,7 +7,7 @@
  * `/* fallback *​/` marker when a name does not exist, so an unverified name
  * would silently bloat the page and render tofu.
  *
- * The nine names must stay in sync with the `icon_names` list in layout.tsx.
+ * The eight names must stay in sync with the `icon_names` list in layout.tsx.
  */
 export const SYMBOLS = {
   tireReplacement: "tire_repair",
@@ -17,7 +17,6 @@ export const SYMBOLS = {
   summer: "sunny",
   allSeason: "partly_cloudy_day",
   winter: "ac_unit",
-  trust: "verified",
   disclosure: "keyboard_arrow_down",
 } as const;
 

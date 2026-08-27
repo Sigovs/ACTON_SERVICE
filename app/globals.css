@@ -417,21 +417,6 @@ h3 {
   color: var(--aaw-white);
 }
 
-.aaw-trust-copy .aaw-symbol {
-  width: 48px;
-  height: 48px;
-}
-
-.aaw-trust-copy .aaw-symbol .material-symbols-sharp {
-  font-size: 36px;
-}
-
-@media (max-width: 900px) {
-  .aaw-trust-copy .aaw-symbol {
-    margin-inline: auto;
-  }
-}
-
 /* ==========================================================================
    Scroll reveals for content images
    ========================================================================== */
@@ -441,9 +426,12 @@ h3 {
    revealed rule below always wins and nothing can strand an element mid-slide. */
 :root[data-motion="on"] [data-reveal] {
   --reveal-x: 54px;
+  --reveal-y: 0px;
   --reveal-scale: 1.025;
+  --reveal-delay: 0ms;
   opacity: 0;
-  transform: translateX(var(--reveal-x)) scale(var(--reveal-scale));
+  transform: translate(var(--reveal-x), var(--reveal-y)) scale(var(--reveal-scale));
+  transition-delay: var(--reveal-delay);
   transition: opacity 820ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 820ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
@@ -462,6 +450,21 @@ h3 {
 
 :root[data-motion="on"] [data-reveal-text][data-reveal="left"] {
   --reveal-x: -36px;
+}
+
+/* Fade-up, for copy that reads as a block rather than sliding in from a side. */
+:root[data-motion="on"] [data-reveal="up"] {
+  --reveal-x: 0px;
+  --reveal-y: 22px;
+  --reveal-scale: 1;
+}
+
+:root[data-motion="on"] [data-reveal-delay="1"] {
+  --reveal-delay: 90ms;
+}
+
+:root[data-motion="on"] [data-reveal-delay="2"] {
+  --reveal-delay: 180ms;
 }
 
 :root[data-motion="on"] [data-reveal][data-revealed="true"] {
@@ -484,6 +487,11 @@ h3 {
 
   :root[data-motion="on"] [data-reveal-text][data-reveal="left"] {
     --reveal-x: -20px;
+  }
+
+  :root[data-motion="on"] [data-reveal="up"] {
+    --reveal-x: 0px;
+    --reveal-y: 16px;
   }
 }
 
@@ -1078,6 +1086,14 @@ h3 {
   width: 66px;
 }
 
+/* Section figure, not an icon: a cut-out above the heading, sitting straight on
+   the section pattern. Capped below its native 536px so it never upscales. */
+.aaw-head img.aaw-seasons-figure {
+  width: clamp(200px, 23vw, 330px);
+  height: auto;
+  margin-bottom: 6px;
+}
+
 .aaw-head h2 {
   max-width: 1000px;
 }
@@ -1121,6 +1137,21 @@ h3 {
 .aaw-split-figure img {
   width: 100%;
   border-radius: 30px;
+}
+
+/* A cut-out sits straight on the section pattern: no frame, no crop, and no
+   clipping — the transparency is the shape. */
+.aaw-split-figure--cutout {
+  overflow: visible;
+  border-radius: 0;
+}
+
+.aaw-split-figure--cutout img {
+  width: auto;
+  max-width: 100%;
+  max-height: 460px;
+  margin-inline: auto;
+  border-radius: 0;
 }
 
 .aaw-split--reverse .aaw-split-copy {
@@ -1271,88 +1302,194 @@ h3 {
   clip-path: var(--aaw-chamfer);
 }
 
-/* Trust -------------------------------------------------------------------- */
+/* Trust: full-bleed photographic band ------------------------------------- */
 
-.aaw-trust {
-  display: grid;
-  grid-template-columns: minmax(200px, 280px) 1fr;
+.aaw-trustband {
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 70px;
-  padding: 60px 70px;
-  border-radius: 10px;
-  background-color: var(--aaw-white);
-  background-image: url("https://www.actonautowerks.com/wp-content/uploads/2025/07/service-bg-1.webp");
-  background-position: top center;
+  width: 100%;
+  min-height: 960px;
+  overflow: clip;
+  background-color: var(--aaw-black);
+  background-image: url("/visual-brake.webp");
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
 }
 
-.aaw-trust-figure {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 4px;
-  aspect-ratio: 1;
-  width: 100%;
-  max-width: 260px;
+/* Readability treatment lives here, not in the image file: an even veil so the
+   centred copy reads anywhere, with the edges a touch deeper so the rotor and
+   the technician stay the brightest things in frame. */
+.aaw-trustband::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      118% 88% at 50% 50%,
+      rgba(0, 0, 0, 0.42) 0%,
+      rgba(0, 0, 0, 0.62) 62%,
+      rgba(0, 0, 0, 0.78) 100%
+    ),
+    rgba(0, 0, 0, 0.28);
+}
+
+.aaw-trustband-inner {
+  position: relative;
+}
+
+.aaw-trustband-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 760px;
   margin-inline: auto;
-  border: 12px solid var(--aaw-tint);
-  border-radius: 50%;
-  color: var(--aaw-primary);
   text-align: center;
 }
 
-.aaw-trust-figure strong {
-  display: block;
+.aaw-trustband h2 {
+  color: var(--aaw-white);
+}
+
+.aaw-trustband p {
+  color: var(--aaw-on-dark);
+}
+
+/* Transparent ring, no fill and no card — the photograph shows through it.
+   Type reuses the existing numeric and utility tokens. */
+.aaw-trustbadge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  width: 236px;
+  height: 236px;
+  margin-bottom: 6px;
+  color: var(--aaw-white);
+}
+
+.aaw-trustbadge-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.aaw-trustbadge-track,
+.aaw-trustbadge-arc {
+  fill: none;
+  stroke-width: 4;
+}
+
+.aaw-trustbadge-track {
+  stroke: rgba(222, 237, 244, 0.22);
+}
+
+.aaw-trustbadge-arc {
+  stroke: var(--aaw-tint);
+  stroke-linecap: round;
+  /* 2 * pi * r, r = 117 */
+  stroke-dasharray: 735.13;
+  stroke-dashoffset: 0;
+}
+
+/* Only run the draw when motion is armed, so with JS off the ring is simply
+   complete rather than invisible. */
+:root[data-motion="on"] .aaw-trustbadge-arc {
+  stroke-dashoffset: 735.13;
+  transition: stroke-dashoffset 1400ms cubic-bezier(0.22, 1, 0.36, 1) 160ms;
+}
+
+:root[data-motion="on"] .aaw-trustbadge[data-revealed="true"] .aaw-trustbadge-arc {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-motion="on"] .aaw-trustbadge-arc {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
+
+.aaw-trustbadge strong {
   font-family: "Unbounded", Arial, sans-serif;
   font-size: 48px;
+  font-weight: 700;
   line-height: 60px;
 }
 
-.aaw-trust-figure span {
-  display: block;
+.aaw-trustbadge span {
   max-width: 150px;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  color: var(--aaw-tint);
 }
 
-.aaw-trust-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-@media (max-width: 1366px) {
-  .aaw-trust {
-    gap: 50px;
-    padding: 50px;
+@media (max-width: 1199px) {
+  .aaw-trustband {
+    min-height: 760px;
   }
 
-  .aaw-trust-figure {
-    max-width: 220px;
-    border-width: 10px;
+  .aaw-trustband::before {
+    background: radial-gradient(
+        130% 92% at 50% 50%,
+        rgba(0, 0, 0, 0.52) 0%,
+        rgba(0, 0, 0, 0.7) 62%,
+        rgba(0, 0, 0, 0.84) 100%
+      ),
+      rgba(0, 0, 0, 0.3);
   }
 
-  .aaw-trust-figure strong {
+  .aaw-trustbadge {
+    width: 196px;
+    height: 196px;
+  }
+
+  .aaw-trustbadge strong {
     font-size: 38px;
     line-height: 55px;
   }
 }
 
-@media (max-width: 900px) {
-  .aaw-trust {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 40px 28px;
-    text-align: center;
+@media (max-width: 767px) {
+  .aaw-trustband {
+    min-height: 720px;
+    padding-block: var(--aaw-section);
+    background-position: 58% center;
   }
 
-  .aaw-trust-figure {
-    max-width: 190px;
+  .aaw-trustband::before {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.76) 50%,
+      rgba(0, 0, 0, 0.84) 100%
+    );
+  }
+
+  .aaw-trustband-copy {
+    gap: 20px;
+  }
+
+  .aaw-trustbadge {
+    width: 164px;
+    height: 164px;
+  }
+
+  .aaw-trustbadge strong {
+    font-size: 34px;
+    line-height: 44px;
+  }
+
+  .aaw-trustbadge span {
+    max-width: 122px;
   }
 }
 

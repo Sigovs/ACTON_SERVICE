@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-/* Only the nine symbols the page actually uses — a 4.6KB subset instead of the
+/* Only the eight symbols the page actually uses — a 4.6KB subset instead of the
    659KB full face. display=block keeps the ligature text from ever flashing. */
 const MATERIAL_SYMBOLS =
   "https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@40,400,0,0" +
   "&icon_names=ac_unit,align_horizontal_center,build_circle,keyboard_arrow_down," +
-  "partly_cloudy_day,settings,sunny,tire_repair,verified&display=block";
+  "partly_cloudy_day,settings,sunny,tire_repair&display=block";
 
 /**
  * Runs before first paint.

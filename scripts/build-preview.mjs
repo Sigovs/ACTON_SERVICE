@@ -89,11 +89,20 @@ for (const entry of fs.readdirSync(OUT)) {
 }
 fs.cpSync(DIST, OUT, { recursive: true });
 
-/* Absolute roots become document-relative so any base path works. */
-html = html
-  .replace(/"\/assets\//g, '"./assets/')
-  .replace(/"\/favicon\.svg"/g, '"./favicon.svg"')
-  .replace(/"\/(tire-wheel-[a-z-]+\.(?:jpg|png|webp))"/g, '"./$1"');
+/* Absolute roots become document-relative so any base path works.
+   The root-level asset names come from what the build actually emitted rather
+   than from a hardcoded pattern, so a newly added image can never be missed. */
+const rootAssets = fs
+  .readdirSync(DIST, { withFileTypes: true })
+  .filter((entry) => entry.isFile())
+  .map((entry) => entry.name);
+
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+html = html.replace(/"\/assets\//g, '"./assets/');
+for (const name of rootAssets) {
+  html = html.replace(new RegExp('"/' + escapeRe(name) + '"', "g"), '"./' + name + '"');
+}
 
 fs.writeFileSync(path.join(OUT, "index.html"), html);
 
@@ -105,7 +114,12 @@ for (const f of fs.readdirSync(assetsDir)) {
   const before = src;
 
   if (f.endsWith(".css")) {
-    src = src.replace(/url\(\/(tire-wheel-[a-z-]+\.(?:jpg|png|webp))\)/g, "url(../$1)");
+    for (const name of rootAssets) {
+      src = src.replace(
+        new RegExp("url\\(/" + escapeRe(name) + "\\)", "g"),
+        "url(../" + name + ")",
+      );
+    }
   }
 
   if (f.endsWith(".js")) {
