@@ -29,6 +29,10 @@ export const SYMBOLS = {
   wiper: "cleaning_services",
   fleet: "local_shipping",
   faq: "help_center",
+  /* Electrical Systems */
+  audio: "graphic_eq",
+  gauge: "speed",
+  software: "system_update",
 } as const;
 
 export type SymbolName = (typeof SYMBOLS)[keyof typeof SYMBOLS];

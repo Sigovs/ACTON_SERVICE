@@ -24,6 +24,28 @@ const DIAGNOSIS = paragraph(BLOCKS, 2);
 const EUROPEAN = section(BLOCKS, 3, "Electronics on European Vehicles");
 const TRUST = section(BLOCKS, 4, "Why Acton Drivers Trust Us");
 
+/* One verified Material Symbol per approved capability, keyed by the approved
+   wording rather than by position. Every name is confirmed against the Google
+   endpoint and listed in the `icon_names` subset in layout.tsx — an unverified
+   name silently ships the full 659KB face and renders tofu. */
+const SERVICE_ICONS = {
+  "Battery replacement": SYMBOLS.battery,
+  "Audio and interior electronic repair": SYMBOLS.audio,
+  "Dashboard and gauge repair": SYMBOLS.gauge,
+  "Software updates": SYMBOLS.software,
+} as const;
+
+function iconFor(item: string) {
+  const icon = SERVICE_ICONS[item as keyof typeof SERVICE_ICONS];
+  if (!icon) {
+    throw new Error(
+      `No icon mapped for the approved service ${JSON.stringify(item)}. ` +
+        `Add a verified Material Symbol to SERVICE_ICONS and to icon_names in layout.tsx.`,
+    );
+  }
+  return icon;
+}
+
 export default function ElectricalSystemsPage() {
   return (
     <>
@@ -61,29 +83,37 @@ export default function ElectricalSystemsPage() {
           </div>
         </section>
 
-        {/* 2 — Signal: the lede, closed by the page's diagnostic trace ------ */}
+        {/* 2 — Signal: the lede beside the equipment that reads it --------- */}
         <section className="aaw-section aaw-pattern aaw-elec-intro">
-          <div className="aaw-shell">
+          <div className="aaw-shell aaw-elec-intro-grid">
             <p className="aaw-elec-lede" data-reveal="up">
               {INTRO}
             </p>
-            <div className="aaw-trace-rule" data-reveal="trace" aria-hidden="true">
-              <span />
-            </div>
+            {/* Decorative: a cut-out of the equipment the copy describes. It
+                sits straight on the section pattern, with no frame. */}
+            <figure className="aaw-elec-intro-figure" data-reveal="right" aria-hidden="true">
+              <img
+                src="/electrical-intro.webp"
+                alt=""
+                width={349}
+                height={262}
+                loading="lazy"
+              />
+            </figure>
           </div>
         </section>
 
-        {/* 3 — Capability, read along the trace rather than as cards -------- */}
+        {/* 3 — Capability as cards that arrive one at a time ---------------- */}
         <section className="aaw-section aaw-elec-services">
           <div className="aaw-shell">
             <h2 data-reveal="left" data-reveal-text>
               {SERVICES.heading}
             </h2>
-            <ul className="aaw-trace">
+            <ul className="aaw-elec-cards">
               {SERVICES.items.map((item, index) => (
-                <li key={item} data-reveal="up" data-reveal-delay={String(Math.min(index, 2))}>
-                  <span className="aaw-trace-node" aria-hidden="true" />
-                  <span className="aaw-trace-label">{item}</span>
+                <li key={item} data-reveal="pop" data-reveal-delay={String(index)}>
+                  <MaterialSymbol name={iconFor(item)} tone="ledger" />
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>

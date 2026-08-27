@@ -133,8 +133,8 @@ export default function EuropeanCarRepairPage() {
                         <img
                           src={`/brand-${slug(chapter.name.replace(/ Repair$/, ""))}.webp`}
                           alt=""
-                          width={1122}
-                          height={1402}
+                          width={800}
+                          height={350}
                           loading="lazy"
                         />
                       </span>

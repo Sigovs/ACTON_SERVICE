@@ -5,7 +5,7 @@ import "./globals.css";
    659KB full face. display=block keeps the ligature text from ever flashing. */
 const MATERIAL_SYMBOLS =
   "https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@40,400,0,0" +
-  "&icon_names=ac_unit,align_horizontal_center,battery_charging_full,bolt,build,build_circle,cleaning_services,filter_alt,help_center,keyboard_arrow_down,local_shipping,oil_barrel,partly_cloudy_day,settings,sunny,tire_repair,troubleshoot,water_drop&display=block";
+  "&icon_names=ac_unit,align_horizontal_center,battery_charging_full,bolt,build,build_circle,cleaning_services,filter_alt,graphic_eq,help_center,keyboard_arrow_down,local_shipping,oil_barrel,partly_cloudy_day,settings,speed,sunny,system_update,tire_repair,troubleshoot,water_drop&display=block";
 
 /**
  * Runs before first paint.
