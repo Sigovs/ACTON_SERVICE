@@ -48,6 +48,14 @@ const JOBS = [
     quality: 92,
   },
   {
+    out: "electrical-trust.webp",
+    from: "electrical Systems why trust.jpg",
+    /* Delivered 1920x960. The copy sits over its lower left, so the readability
+       gradient is applied in CSS and nothing is baked into the file. */
+    crop: null,
+    quality: 86,
+  },
+  {
     out: "autobody-hero.webp",
     from: "european-source/break-workshop.png",
     /* Whole car bodies in a calm, warm bay, with the right side clear for the

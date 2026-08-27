@@ -2998,20 +2998,87 @@ h3 {
 
 /* 7 — Trust --------------------------------------------------------------- */
 
+/* The trust beat is now the page's second photograph, with the copy set into
+   its lower left rather than sitting on a flat black band. */
 .aaw-elec-trust {
-  background: var(--aaw-black);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 660px;
+  overflow: clip;
+  background-color: var(--aaw-black);
+  background-image: url("/electrical-trust.webp");
+  background-position: center 42%;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: var(--aaw-on-dark);
+}
+
+/* Readability lives here, never baked into the file: one diagonal wash that
+   deepens toward the copy, and a second that weights the bottom edge. */
+.aaw-elec-trust::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      100deg,
+      rgba(0, 0, 0, 0.78) 0%,
+      rgba(0, 0, 0, 0.5) 34%,
+      rgba(0, 0, 0, 0.12) 66%,
+      rgba(0, 0, 0, 0.04) 100%
+    ),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0) 52%);
+}
+
+.aaw-elec-trust .aaw-shell {
+  position: relative;
 }
 
 .aaw-elec-trust-inner {
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  max-width: 900px;
+  gap: 20px;
+  max-width: 720px;
 }
 
 .aaw-elec-trust h2 {
   color: var(--aaw-white);
+}
+
+.aaw-elec-trust p {
+  max-width: 62ch;
+  color: var(--aaw-on-dark);
+  font-size: 17px;
+  line-height: 31px;
+}
+
+@media (max-width: 1024px) {
+  .aaw-elec-trust {
+    min-height: 560px;
+    background-position: center 44%;
+  }
+}
+
+@media (max-width: 767px) {
+  .aaw-elec-trust {
+    min-height: 0;
+    background-position: center 46%;
+  }
+
+  /* Too narrow to hold copy over a busy frame, so the wash goes near-solid. */
+  .aaw-elec-trust::before {
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.78) 60%,
+      rgba(0, 0, 0, 0.66) 100%
+    );
+  }
+
+  .aaw-elec-trust p {
+    font-size: 16px;
+    line-height: 28px;
+  }
 }
 
 /* ==========================================================================
