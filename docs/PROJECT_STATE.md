@@ -144,3 +144,58 @@ Verified at 1920 / 1440 / 1366 / 1024 / 768 / 390: one H1, utility 41, header
 85, logo 98x34, hero 600, zero horizontal overflow, no failed requests, no
 console errors, and the trust copy optically centred at every width (top gap
 equals bottom gap).
+
+## European hub — marque plates and two stacking/sizing fixes (2026-08-27)
+
+### Marque plate
+
+Each brand chapter carries a small portrait photo hung across its own top
+seam — not beside the copy and not above it. It sits at the head's top-right,
+pulled up by the chapter's padding plus 30px so it crosses the seam and lands
+in the previous chapter's bottom padding, where there is never any copy. On a
+graphite chapter it crosses from white into the dark band; on a light chapter
+it crosses out of the band above.
+
+Motion, both dependency-free:
+
+1. **Entry** — the frame settles out of a 3.5° tilt (alternating down the
+   stream) while a shutter wipe opens inside it. Driven by the existing
+   IntersectionObserver reveal, as a new `data-reveal="plate"` variant.
+2. **Drift** — a scroll-linked parallax on the image using the native
+   `animation-timeline: view()`, behind `@supports` and
+   `prefers-reduced-motion: no-preference`. Browsers without it show the
+   still frame. No animation library, per the project rule.
+
+**The wipe must never live on the observed element.** A `clip-path` that
+collapses the box to zero area also collapses its intersection ratio, so the
+0.18 reveal threshold can never be met and the element stays hidden forever.
+The clip lives on `.aaw-euro-plate-inner`; the observed `<figure>` stays
+unclipped. This cost a full debug cycle — all 25 other reveals fired and only
+the 7 plates did not.
+
+Images are `public/brand-<marque>.webp`, currently labelled placeholders at
+480x600 (portrait 4:5). Real photography drops in at the same paths.
+
+### Two fixes found along the way
+
+**The graphite band was being painted over.** BMW and Land Rover showed white
+headings on a white page. The band is a `z-index: -1` pseudo-element and
+nothing between the chapter and `<html>` created a stacking context, so it
+fell into the root's negative layer where `.aaw-euro-hub`'s white background
+covers it. `isolation: isolate` on the graphite chapter fixes it.
+
+**The mobile stream was 814px wide inside a 390px viewport.** At <=1024 the
+brand index becomes a full-width rail and, as a grid item, defaults to
+`min-width: auto` — so the rail's min-content (seven chips in a row) became
+the floor of the single `1fr` track and dragged the chapter stream with it.
+Body copy was being clipped off-screen. `min-width: 0` on `.aaw-euro-index`
+fixes it.
+
+Both were invisible to the overflow check: `overflow-x: clip` suppresses
+`scrollWidth`, so `documentElement.scrollWidth - clientWidth` reads 0 while
+content is clipped away. **A zero overflow reading on this page proves
+nothing on its own** — compare child rects against the viewport instead.
+
+Verified at 1920/1440/1366/1024/768/390: 7 plates, 7 revealed, 7 loaded, no
+failed requests, no console errors, and the stream inside the viewport at
+every width.

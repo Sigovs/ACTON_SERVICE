@@ -2394,6 +2394,8 @@ h3 {
 .aaw-euro-chapter {
   /* Clears the sticky header when a hash link jumps here. */
   scroll-margin-top: 150px;
+  /* Anchors the marque plate, which hangs above this box's top edge. */
+  position: relative;
   padding: 56px 0;
   border-top: 1px solid rgba(11, 92, 127, 0.16);
 }
@@ -2436,7 +2438,96 @@ h3 {
 }
 
 .aaw-euro-chapter-head {
+  position: relative;
+  /* Reserves the plate's footprint so it can never sit on the copy: the
+     min-height clears its lower half, the padding clears the heading. */
+  min-height: 140px;
   margin-bottom: 22px;
+  padding-right: 200px;
+}
+
+/* Marque plate ------------------------------------------------------------
+   Hung across the chapter's own top edge rather than placed beside or above
+   the text, so each marque breaks its own seam. */
+
+.aaw-euro-plate {
+  position: absolute;
+  /* 56px of chapter padding plus 30px, so the plate crosses the chapter seam
+     and lands in the previous chapter's bottom padding — never on its copy. */
+  top: -86px;
+  right: 0;
+  z-index: 2;
+  width: 168px;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.aaw-euro-plate-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Oversized inside its frame so the scroll drift below never exposes an edge. */
+.aaw-euro-plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.14);
+}
+
+/* Entry: the frame settles out of its tilt while a shutter opens inside it,
+   alternating side to side down the stream. Specificity clears the generic
+   reveal rules outright, so this does not depend on source order. */
+:root[data-motion="on"] .aaw-euro-plate[data-reveal] {
+  --plate-tilt: -3.5deg;
+  transform: translateY(26px) rotate(var(--plate-tilt)) scale(1.05);
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 950ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aaw-euro-chapter:nth-of-type(even) .aaw-euro-plate {
+  --plate-tilt: 3.5deg;
+}
+
+:root[data-motion="on"] .aaw-euro-plate[data-reveal] .aaw-euro-plate-inner {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 950ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
+}
+
+:root[data-motion="on"] .aaw-euro-plate[data-reveal][data-revealed="true"] {
+  transform: translateY(0) rotate(0deg) scale(1);
+}
+
+:root[data-motion="on"]
+  .aaw-euro-plate[data-reveal][data-revealed="true"]
+  .aaw-euro-plate-inner {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Drift: scroll-linked, native timeline, no library. Browsers without
+   `view()` simply show the still frame. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .aaw-euro-plate img {
+      animation: aaw-plate-drift linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+@keyframes aaw-plate-drift {
+  from {
+    transform: translateY(-7%) scale(1.14);
+  }
+
+  to {
+    transform: translateY(7%) scale(1.14);
+  }
 }
 
 /* The marque leads; the source's tagline follows at supporting weight. */
@@ -2511,6 +2602,11 @@ h3 {
     position: sticky;
     top: 126px;
     z-index: 8;
+    /* Load-bearing. As a grid item this defaults to `min-width: auto`, so the
+       rail's min-content — seven chips in a row, ~814px — becomes the floor of
+       the single `1fr` track and drags the whole chapter stream wider than the
+       viewport. The rail scrolls on its own; it must not size the column. */
+    min-width: 0;
     margin-inline: calc(var(--aaw-gutter) * -1);
     padding-block: 10px;
     background: var(--aaw-white);
@@ -2547,11 +2643,33 @@ h3 {
   .aaw-euro-chapter {
     scroll-margin-top: 190px;
   }
+
+  .aaw-euro-chapter-head {
+    min-height: 100px;
+    padding-right: 156px;
+  }
+
+  .aaw-euro-plate {
+    top: -86px;
+    width: 132px;
+  }
 }
 
 @media (max-width: 767px) {
   .aaw-euro-chapter {
     padding: 40px 0;
+  }
+
+  .aaw-euro-chapter-head {
+    min-height: 80px;
+    padding-right: 116px;
+  }
+
+  .aaw-euro-plate {
+    /* Chapter padding drops to 40px here. */
+    top: -62px;
+    width: 100px;
+    border-radius: 8px;
   }
 
   .aaw-euro-chapter[data-tone="graphite"] {
