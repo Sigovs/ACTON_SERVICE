@@ -2438,19 +2438,7 @@ h3 {
 }
 
 .aaw-euro-chapter-head {
-  /* Heading left, plate right. A grid rather than absolute positioning, so
-     the plate can be a real photograph at a real size and the head simply
-     grows to hold it. */
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 480px;
-  align-items: start;
-  gap: 40px;
   margin-bottom: 26px;
-}
-
-.aaw-euro-chapter-head h2 {
-  grid-column: 1;
-  grid-row: 1;
 }
 
 /* Marque plate ------------------------------------------------------------
@@ -2459,16 +2447,27 @@ h3 {
    never a badge or a wordmark, which would imply a dealer relationship the
    copy does not claim. */
 
+/* Floated rather than gridded: at 600px tall a grid column would leave the
+   heading stranded above ~430px of dead space. A float lets the heading and
+   the opening copy set beside the plate and close under it on their own. */
 .aaw-euro-plate {
-  grid-column: 2;
-  grid-row: 1;
+  float: right;
+  width: 360px;
   /* 56px of chapter padding plus 30px, so the plate crosses the seam and
      lands in the previous chapter's bottom padding — never on its copy. */
-  margin: -86px 0 0;
-  aspect-ratio: 16 / 9;
+  margin: -86px 0 28px 46px;
+  /* Matches the delivered photography: 480x600 at this column width. The
+     frame follows the art rather than cropping a portrait into a letterbox. */
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+/* The item grid establishes its own formatting context, so it would sit
+   beside a still-open float and lose half its width. Start it on clean line. */
+.aaw-euro-items {
+  clear: both;
 }
 
 .aaw-euro-plate-inner {
@@ -2485,33 +2484,20 @@ h3 {
   transform: scale(1.12);
 }
 
-/* Entry: the frame settles out of a slight tilt while a shutter opens across
-   it, alternating direction down the stream. Specificity clears the generic
-   reveal rules outright, so this does not depend on source order. */
+/* Entry: slides in from the outer edge as the chapter comes into view, using
+   the same translate-and-fade grammar as every other reveal on the site.
+   Specificity clears the generic reveal rules outright, so this does not
+   depend on source order. Nothing clips the observed element — a clip-path
+   that collapses its box also collapses its intersection ratio, and the
+   reveal threshold would never be met. */
 :root[data-motion="on"] .aaw-euro-plate[data-reveal] {
-  --plate-tilt: -2deg;
-  transform: translateY(22px) rotate(var(--plate-tilt)) scale(1.03);
+  transform: translateX(78px);
   transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 950ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.aaw-euro-chapter:nth-of-type(even) .aaw-euro-plate {
-  --plate-tilt: 2deg;
-}
-
-:root[data-motion="on"] .aaw-euro-plate[data-reveal] .aaw-euro-plate-inner {
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 1000ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root[data-motion="on"] .aaw-euro-plate[data-reveal][data-revealed="true"] {
-  transform: translateY(0) rotate(0deg) scale(1);
-}
-
-:root[data-motion="on"]
-  .aaw-euro-plate[data-reveal][data-revealed="true"]
-  .aaw-euro-plate-inner {
-  clip-path: inset(0 0 0 0);
+  transform: translateX(0);
 }
 
 /* Drift: scroll-linked, native timeline, no library. Browsers without
@@ -2650,9 +2636,9 @@ h3 {
     scroll-margin-top: 190px;
   }
 
-  .aaw-euro-chapter-head {
-    grid-template-columns: minmax(0, 1fr) 340px;
-    gap: 28px;
+  .aaw-euro-plate {
+    width: 280px;
+    margin-left: 30px;
   }
 }
 
@@ -2661,23 +2647,13 @@ h3 {
     padding: 40px 0;
   }
 
-  /* Stacked: the plate leads, so it still reaches the seam, and the heading
-     follows underneath at full width. */
-  .aaw-euro-chapter-head {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 22px;
-  }
-
-  .aaw-euro-chapter-head h2 {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
+  /* Too narrow to set copy beside a 4:5 plate, so it stops floating and runs
+     full width — still reaching the seam, with the heading below it. */
   .aaw-euro-plate {
-    grid-column: 1;
-    grid-row: 1;
-    /* Chapter padding drops to 40px here. */
-    margin-top: -62px;
+    float: none;
+    width: 78%;
+    /* Held to the outer edge so it still reads as the same right-hand plate. */
+    margin: -62px 0 22px auto;
     border-radius: 8px;
   }
 

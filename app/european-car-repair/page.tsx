@@ -119,29 +119,28 @@ export default function EuropeanCarRepairPage() {
                     key={chapter.name}
                     data-tone={index % 3 === 1 ? "graphite" : "light"}
                   >
-                    <header className="aaw-euro-chapter-head">
-                      {/* Placed first so it leads once the head stacks on
-                          narrow screens, where it must sit above the heading
-                          to reach the seam; grid placement keeps it on the
-                          right at desktop. Decorative either way — the heading
-                          already announces the marque, and the photography is
-                          of the work rather than of any badge or wordmark.
+                    {/* Ahead of the header because it floats: the heading and the
+                        opening copy set beside it and close under it. Decorative
+                        — the heading already announces the marque, and the
+                        photography is of the work, not of any badge.
 
-                          The wipe lives on the inner element, never on the
-                          observed one: a clip-path that collapses the box to
-                          zero area also collapses its intersection ratio, and
-                          the reveal threshold would never be met. */}
-                      <figure className="aaw-euro-plate" data-reveal="plate" aria-hidden="true">
-                        <span className="aaw-euro-plate-inner">
-                          <img
-                            src={`/brand-${slug(chapter.name.replace(/ Repair$/, ""))}.webp`}
-                            alt=""
-                            width={960}
-                            height={540}
-                            loading="lazy"
-                          />
-                        </span>
-                      </figure>
+                        The wipe lives on the inner element, never on the
+                        observed one: a clip-path that collapses the box to
+                        zero area also collapses its intersection ratio, and
+                        the reveal threshold would never be met. */}
+                    <figure className="aaw-euro-plate" data-reveal="plate" aria-hidden="true">
+                      <span className="aaw-euro-plate-inner">
+                        <img
+                          src={`/brand-${slug(chapter.name.replace(/ Repair$/, ""))}.webp`}
+                          alt=""
+                          width={1122}
+                          height={1402}
+                          loading="lazy"
+                        />
+                      </span>
+                    </figure>
+
+                    <header className="aaw-euro-chapter-head">
                       <h2 data-reveal="left" data-reveal-text>
                         {chapter.name} <span>{chapter.tagline}</span>
                       </h2>
