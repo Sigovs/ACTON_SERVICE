@@ -1,3 +1,5 @@
+import { routeFrom, type PageKey } from "./site-nav";
+
 /**
  * Client preview scope.
  *
@@ -25,9 +27,16 @@ export function siteLink(href: string): InertProps {
 
 /**
  * Spread onto an `<a>` for a navigation node. Routes inside this build are
- * always real links; live-site pages stay gated by `LINK_TO_LIVE_SITE`.
+ * always real links, resolved relative to the page being rendered; live-site
+ * pages stay gated by `LINK_TO_LIVE_SITE`.
  */
-export function navLink(node: { href?: string; internal?: boolean }): InertProps {
+export function navLink(
+  node: { href?: string; internal?: boolean; key?: PageKey },
+  current?: PageKey,
+): InertProps {
+  if (node.internal && node.key && current) {
+    return { href: routeFrom(current, node.key) };
+  }
   if (!node.href) return { "data-inert": "true" };
   return node.internal ? { href: node.href } : siteLink(node.href);
 }

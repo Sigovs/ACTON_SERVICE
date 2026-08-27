@@ -1842,3 +1842,412 @@ h3 {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* ==========================================================================
+   Maintenance & Service Intervals — page-specific body layouts
+   The shell above is shared and frozen; everything here is new to this page so
+   the two pages do not share a silhouette.
+   ========================================================================== */
+
+/* Hero photograph differs per page; all other hero metrics stay locked. */
+.aaw-hero--maintenance {
+  background-image: url("/visual-brake.webp");
+}
+
+/* 2 — Asymmetric intro: wide image left, copy right ----------------------- */
+
+.aaw-introband-grid {
+  display: grid;
+  grid-template-columns: 62fr 38fr;
+  align-items: center;
+  gap: 60px;
+  /* The image runs out to the viewport edge while the copy stays on the
+     1350 container line. */
+  padding-right: max(var(--aaw-gutter), calc(50vw - var(--aaw-max) / 2));
+}
+
+.aaw-introband-figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0 30px 30px 0;
+}
+
+.aaw-introband-figure img {
+  width: 100%;
+  height: auto;
+}
+
+.aaw-introband-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 520px;
+}
+
+/* The opening sentence carries the heading treatment; it is not repeated in
+   the paragraphs below. */
+.aaw-introband-copy h2 {
+  font-size: var(--aaw-h3);
+  line-height: var(--aaw-h3-lh);
+}
+
+@media (max-width: 1024px) {
+  .aaw-introband-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-right: 0;
+  }
+
+  .aaw-introband-figure {
+    border-radius: 0 0 30px 0;
+  }
+
+  .aaw-introband-copy {
+    width: 100%;
+    max-width: calc(var(--aaw-max) + var(--aaw-gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--aaw-gutter);
+  }
+}
+
+/* 3 — Teal service ledger ------------------------------------------------- */
+
+.aaw-ledger {
+  background: var(--aaw-primary);
+  color: var(--aaw-white);
+}
+
+.aaw-ledger-grid {
+  display: grid;
+  grid-template-columns: 35fr 65fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.aaw-ledger-head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.aaw-ledger-head h2 {
+  color: var(--aaw-white);
+}
+
+/* One oversized mark rather than a photograph, so the section stays a ledger
+   and the rows remain the subject. */
+.aaw-ledger-mark {
+  display: block;
+  color: var(--aaw-white);
+  opacity: 0.16;
+}
+
+.aaw-ledger-mark .material-symbols-sharp {
+  font-family: "Material Symbols Sharp";
+  font-size: 190px;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
+  line-height: 1;
+}
+
+:root:not([data-icons="ready"]) .aaw-ledger-mark .material-symbols-sharp {
+  visibility: hidden;
+}
+
+.aaw-ledger-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aaw-ledger-list li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.aaw-ledger-list .aaw-symbol {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+}
+
+.aaw-symbol[data-tone="ledger"] {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--aaw-white);
+}
+
+.aaw-ledger-list .aaw-symbol .material-symbols-sharp {
+  font-size: 24px;
+}
+
+@media (max-width: 1024px) {
+  .aaw-ledger-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .aaw-ledger-mark .material-symbols-sharp {
+    font-size: 120px;
+  }
+}
+
+@media (max-width: 767px) {
+  .aaw-ledger-list {
+    grid-template-columns: 1fr;
+  }
+
+  .aaw-ledger-mark {
+    display: none;
+  }
+}
+
+/* 4 — Interval scene ------------------------------------------------------ */
+
+.aaw-intervals-track {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+  margin-top: 50px;
+}
+
+.aaw-intervals-metric strong {
+  display: block;
+  color: var(--aaw-primary);
+  font-family: "Unbounded", Arial, sans-serif;
+  font-size: var(--aaw-h2);
+  font-weight: 700;
+  line-height: var(--aaw-h2-lh);
+  white-space: nowrap;
+}
+
+/* A maintenance track rather than a divider: a teal run with a stop at each
+   end, marking the two approved values. */
+.aaw-intervals-line {
+  position: relative;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--aaw-primary) 0%,
+    rgba(11, 92, 127, 0.35) 50%,
+    var(--aaw-primary) 100%
+  );
+}
+
+.aaw-intervals-line::before,
+.aaw-intervals-line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--aaw-primary);
+  border-radius: 50%;
+  background: var(--aaw-white);
+  translate: 0 -50%;
+}
+
+.aaw-intervals-line::before {
+  left: -6px;
+}
+
+.aaw-intervals-line::after {
+  right: -6px;
+}
+
+.aaw-intervals-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 900px;
+  margin: 40px auto 0;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .aaw-intervals-track {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 18px;
+    margin-top: 34px;
+  }
+
+  .aaw-intervals-line {
+    width: 2px;
+    height: 56px;
+    background: linear-gradient(
+      180deg,
+      var(--aaw-primary) 0%,
+      rgba(11, 92, 127, 0.35) 50%,
+      var(--aaw-primary) 100%
+    );
+  }
+
+  .aaw-intervals-line::before {
+    left: 50%;
+    top: -6px;
+    translate: -50% 0;
+  }
+
+  .aaw-intervals-line::after {
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: -6px;
+    translate: -50% 0;
+  }
+
+  .aaw-intervals-copy {
+    margin-top: 30px;
+    text-align: left;
+  }
+}
+
+/* 5 — Dark photographic split trust --------------------------------------- */
+
+.aaw-trustsplit {
+  display: grid;
+  grid-template-columns: 58fr 42fr;
+  width: 100%;
+  min-height: 760px;
+  overflow: clip;
+  background: var(--aaw-black);
+}
+
+.aaw-trustsplit-media {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Absolute so the image fills the grid cell exactly and object-fit actually
+   crops. With height:100% alone the cell has no definite height, the value
+   falls back to auto, and a square source would set the section height. */
+.aaw-trustsplit-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Softens the seam so the two halves read as one section rather than two
+   unrelated cards. */
+.aaw-trustsplit-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.05) 40%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.aaw-trustsplit-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  padding: 60px clamp(24px, 5vw, 72px);
+  background: var(--aaw-black);
+  color: var(--aaw-on-dark);
+}
+
+.aaw-trustsplit-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 520px;
+  text-align: left;
+}
+
+.aaw-trustsplit-panel h2 {
+  color: var(--aaw-white);
+}
+
+/* Badge straddles the seam between photograph and panel. */
+.aaw-trustbadge--seam {
+  width: 150px;
+  height: 150px;
+  margin-left: -108px;
+  gap: 0;
+}
+
+.aaw-trustbadge--seam strong {
+  font-size: 34px;
+  line-height: 44px;
+}
+
+@media (max-width: 1024px) {
+  .aaw-trustsplit {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .aaw-trustsplit-media {
+    min-height: 320px;
+  }
+
+  .aaw-trustsplit-media::after {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.2) 0%,
+      rgba(0, 0, 0, 0.1) 45%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+  }
+
+  .aaw-trustsplit-panel {
+    padding: 0 var(--aaw-gutter) var(--aaw-section);
+  }
+
+  .aaw-trustbadge--seam {
+    margin-left: 0;
+    margin-top: -84px;
+  }
+
+  .aaw-trustsplit-copy {
+    max-width: 100%;
+  }
+}
+
+/* 6 — Asymmetric FAQ ------------------------------------------------------ */
+
+.aaw-faqsplit-grid {
+  display: grid;
+  grid-template-columns: 35fr 65fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.aaw-faqsplit-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  text-align: left;
+}
+
+.aaw-faq--split {
+  max-width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .aaw-faqsplit-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}

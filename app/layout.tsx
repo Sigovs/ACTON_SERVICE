@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-/* Only the eight symbols the page actually uses — a 4.6KB subset instead of the
+/* Only the symbols the pages actually use — a small subset instead of the
    659KB full face. display=block keeps the ligature text from ever flashing. */
 const MATERIAL_SYMBOLS =
   "https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@40,400,0,0" +
-  "&icon_names=ac_unit,align_horizontal_center,build_circle,keyboard_arrow_down," +
-  "partly_cloudy_day,settings,sunny,tire_repair&display=block";
+  "&icon_names=ac_unit,align_horizontal_center,battery_charging_full,bolt,build,build_circle,cleaning_services,filter_alt,help_center,keyboard_arrow_down,local_shipping,oil_barrel,partly_cloudy_day,settings,sunny,tire_repair,troubleshoot,water_drop&display=block";
 
 /**
  * Runs before first paint.
@@ -28,10 +27,8 @@ if (document.fonts && document.fonts.load) {
 }
 `;
 
+/* Page titles live on each route; only the icon is shared. */
 export const metadata: Metadata = {
-  title: "Tire & Wheel Service in Acton, MA | Acton Autowerks",
-  description:
-    "Tire replacement, mounting, balancing, repair, and wheel alignment in Acton, MA for daily drivers and the European and performance vehicles we specialize in. Call (978) 429-8913.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

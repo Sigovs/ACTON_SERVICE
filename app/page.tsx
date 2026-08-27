@@ -1,16 +1,15 @@
+import type { Metadata } from "next";
 import SiteHeader from "./site-header";
+import SiteFooter from "./site-footer";
 import Reveal from "./reveal";
 import { MaterialSymbol, SYMBOLS } from "./material-symbol";
-import { FOOTER_QUICK_LINKS, FOOTER_SERVICES } from "./site-nav";
-import { navLink } from "./site-links";
-import {
-  CheckIcon,
-  FacebookIcon,
-  InstagramIcon,
-  MailIcon,
-  PhoneIcon,
-  PinIcon,
-} from "./icons";
+import { CheckIcon, PhoneIcon } from "./icons";
+
+export const metadata: Metadata = {
+  title: "Tire & Wheel Service in Acton, MA | Acton Autowerks",
+  description:
+    "Tire replacement, mounting, balancing, repair, and wheel alignment in Acton, MA for daily drivers and the European and performance vehicles we specialize in. Call (978) 429-8913.",
+};
 
 const CDN = "https://www.actonautowerks.com/wp-content/uploads";
 
@@ -105,7 +104,7 @@ export default function TireAndWheelServicePage() {
         Skip to content
       </a>
 
-      <SiteHeader />
+      <SiteHeader current="tire-wheel" />
       <Reveal />
 
       <main id="content">
@@ -374,106 +373,7 @@ export default function TireAndWheelServicePage() {
         </section>
       </main>
 
-      {/* 9 — Footer --------------------------------------------------------- */}
-      <footer className="aaw-footer">
-        <div className="aaw-shell aaw-footer-grid">
-          <div className="aaw-footer-col aaw-footer-col--brand">
-            <a href="https://www.actonautowerks.com/" aria-label="Acton Autowerks home">
-              <img
-                src={`${CDN}/2025/07/site-logo.png`}
-                alt="Acton Autowerks"
-                width={112}
-                height={39}
-                loading="lazy"
-              />
-            </a>
-            <p>
-              Your one-stop destination for trusted automotive care, performance
-              upgrades, and protection that keeps every vehicle in its best
-              shape.
-            </p>
-            <div className="aaw-footer-social">
-              <a
-                href="https://www.facebook.com/ActonAutoWerks/"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Acton Autowerks on Facebook"
-              >
-                <FacebookIcon size={21} />
-              </a>
-              <a
-                href="https://www.instagram.com/acton_autowerks/?hl=en"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Acton Autowerks on Instagram"
-              >
-                <InstagramIcon size={21} />
-              </a>
-            </div>
-          </div>
-
-          <div className="aaw-footer-col">
-            <p className="aaw-footer-title">Services</p>
-            <ul className="aaw-footer-links">
-              {FOOTER_SERVICES.map((item) => (
-                <li key={item.label}>
-                  <a {...navLink(item)} aria-current={item.current ? "page" : undefined}>
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="aaw-footer-col">
-            <p className="aaw-footer-title">Quick Links</p>
-            <ul className="aaw-footer-links">
-              {FOOTER_QUICK_LINKS.map((item) => (
-                <li key={item.label}>
-                  <a {...navLink(item)}>{item.label}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="aaw-footer-col">
-            <p className="aaw-footer-title">Contact Us</p>
-            <ul className="aaw-footer-contact">
-              <li>
-                <a href={`mailto:${EMAIL}`}>
-                  <MailIcon size={18} />
-                  {EMAIL}
-                </a>
-              </li>
-              <li>
-                <a href={PHONE_HREF}>
-                  <PhoneIcon size={18} />
-                  {PHONE_DISPLAY}
-                </a>
-              </li>
-              <li>
-                <a href={MAPS} target="_blank" rel="noreferrer">
-                  <PinIcon size={14} />
-                  {ADDRESS}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="aaw-footer-bar">
-          <div className="aaw-shell">
-            <p>
-              Copyright &copy; 2026 <b>Acton Autowerks</b>. All rights reserved
-            </p>
-            <p>
-              <a href="https://www.actonautowerks.com/privacy-policy/">
-                Privacy Policy
-              </a>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter current="tire-wheel" />
     </>
   );
 }

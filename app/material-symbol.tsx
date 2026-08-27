@@ -7,7 +7,7 @@
  * `/* fallback *​/` marker when a name does not exist, so an unverified name
  * would silently bloat the page and render tofu.
  *
- * The eight names must stay in sync with the `icon_names` list in layout.tsx.
+ * These names must stay in sync with the `icon_names` list in layout.tsx.
  */
 export const SYMBOLS = {
   tireReplacement: "tire_repair",
@@ -18,6 +18,17 @@ export const SYMBOLS = {
   allSeason: "partly_cloudy_day",
   winter: "ac_unit",
   disclosure: "keyboard_arrow_down",
+  /* Maintenance & Service Intervals */
+  oil: "oil_barrel",
+  tuneUp: "build",
+  fluid: "water_drop",
+  filter: "filter_alt",
+  battery: "battery_charging_full",
+  spark: "bolt",
+  diagnostics: "troubleshoot",
+  wiper: "cleaning_services",
+  fleet: "local_shipping",
+  faq: "help_center",
 } as const;
 
 export type SymbolName = (typeof SYMBOLS)[keyof typeof SYMBOLS];
@@ -25,8 +36,8 @@ export type SymbolName = (typeof SYMBOLS)[keyof typeof SYMBOLS];
 type Props = {
   /** A verified Material Symbols Sharp ligature name. */
   name: SymbolName;
-  /** `pale` sits on light bands, `plain` on cards and dark bands. */
-  tone?: "pale" | "plain";
+  /** `pale` on light bands, `plain` on cards, `ledger` on the teal band. */
+  tone?: "pale" | "plain" | "ledger";
 };
 
 export function MaterialSymbol({ name, tone = "pale" }: Props) {

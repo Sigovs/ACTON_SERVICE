@@ -74,9 +74,22 @@ function stopServer() {
   else server.kill("SIGTERM");
 }
 
-let html;
+/* Every route the snapshot must serve. `depth` is how many directories the
+   emitted file sits below the snapshot root, which sets its relative prefix. */
+const ROUTES = [
+  { route: "/", out: "index.html", depth: 0 },
+  {
+    route: "/maintenance-service-intervals/",
+    out: "maintenance-service-intervals/index.html",
+    depth: 1,
+  },
+];
+
+const pages = [];
 try {
-  html = await fetchWithRetry(`http://localhost:${PORT}/`);
+  for (const page of ROUTES) {
+    pages.push({ ...page, html: await fetchWithRetry(`http://localhost:${PORT}${page.route}`) });
+  }
 } finally {
   stopServer();
 }
@@ -99,12 +112,27 @@ const rootAssets = fs
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-html = html.replace(/"\/assets\//g, '"./assets/');
-for (const name of rootAssets) {
-  html = html.replace(new RegExp('"/' + escapeRe(name) + '"', "g"), '"./' + name + '"');
-}
+for (const page of pages) {
+  /* A page one directory down needs "../" to reach the snapshot root. */
+  const prefix = page.depth === 0 ? "./" : "../".repeat(page.depth);
+  let html = page.html.replace(/"\/assets\//g, `"${prefix}assets/`);
+  for (const name of rootAssets) {
+    html = html.replace(new RegExp('"/' + escapeRe(name) + '"', "g"), `"${prefix}${name}"`);
+  }
+  /* Chunk names inside the bundle are root-relative ("assets/x.js"), and the
+     shared resolver cannot use document.baseURI because that differs per route.
+     Each page declares its own way back to the snapshot root instead. */
+  html = html.replace(
+    /<head>/,
+    `<head><script>window.__aawBase=${JSON.stringify(prefix)}</script>`,
+  );
 
-fs.writeFileSync(path.join(OUT, "index.html"), html);
+  const target = path.join(OUT, page.out);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, html);
+  page.rewritten = html;
+  console.log("  page " + page.route + " -> " + page.out);
+}
 
 /* CSS lives in ./assets, so its root-absolute urls need one level up. */
 const assetsDir = path.join(OUT, "assets");
@@ -123,11 +151,12 @@ for (const f of fs.readdirSync(assetsDir)) {
   }
 
   if (f.endsWith(".js")) {
-    /* Vite's asset resolver hardcodes a "/" base; resolve against the
-       document instead so chunk preloads land under the project base. */
+    /* Vite's asset resolver hardcodes a "/" base. Point it at the per-page
+       root prefix instead — document.baseURI would resolve chunk names against
+       the nested route's own directory and 404. */
     src = src.replace(
       /function\(e\)\{return`\/`\+e\}/g,
-      "function(e){return new URL(e,document.baseURI).href}",
+      'function(e){return (window.__aawBase||"./")+e}',
     );
   }
 
@@ -139,23 +168,35 @@ for (const f of fs.readdirSync(assetsDir)) {
 
 fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
 
-/* Every asset the page asks for must exist, or the snapshot is stale. */
-const referenced = [...html.matchAll(/\.\/assets\/([A-Za-z0-9_-]+\.(?:js|css))/g)].map(
-  (m) => m[1],
-);
-const missing = [...new Set(referenced)].filter(
-  (f) => !fs.existsSync(path.join(assetsDir, f)),
-);
-if (missing.length) {
-  console.error("snapshot is stale — index.html references missing assets:");
-  missing.forEach((f) => console.error("  " + f));
-  process.exit(1);
+/* Every reference each page makes must resolve, or the snapshot is stale. */
+let checked = 0;
+for (const page of pages) {
+  const prefix = page.depth === 0 ? "\\./" : "(?:\\.\\./)+";
+  const re = new RegExp(prefix + "((?:assets/)?[A-Za-z0-9_.-]+\\.(?:js|css|webp|jpg|png|svg))", "g");
+  const referenced = [...new Set([...page.rewritten.matchAll(re)].map((m) => m[1]))];
+  const missing = referenced.filter((f) => !fs.existsSync(path.join(OUT, f)));
+  if (missing.length) {
+    console.error(`snapshot is stale — ${page.out} references missing assets:`);
+    missing.forEach((f) => console.error("  " + f));
+    process.exit(1);
+  }
+
+  /* The icon font must survive or every symbol on the page vanishes. */
+  if (!page.rewritten.includes("Material+Symbols+Sharp")) {
+    console.error(`${page.out} is missing the Material Symbols stylesheet link.`);
+    process.exit(1);
+  }
+
+  /* Exactly one H1 per page. */
+  const h1s = (page.rewritten.match(/<h1[\s>]/g) || []).length;
+  if (h1s !== 1) {
+    console.error(`${page.out} has ${h1s} <h1> elements; expected exactly 1.`);
+    process.exit(1);
+  }
+
+  checked += referenced.length;
 }
 
-/* The icon font must survive into the snapshot or every symbol vanishes. */
-if (!html.includes("Material+Symbols+Sharp")) {
-  console.error("snapshot is missing the Material Symbols stylesheet link.");
-  process.exit(1);
-}
-
-console.log(`snapshot ready in .pages/ (${referenced.length} asset refs verified)`);
+console.log(
+  `snapshot ready in .pages/ (${pages.length} routes, ${checked} asset refs verified)`,
+);

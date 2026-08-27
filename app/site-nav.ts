@@ -4,32 +4,53 @@
  * Every new service content page belongs UNDER "Service & Maintenance" — never
  * as a new top-level item. To publish the next approved page, add one entry to
  * `children` on the Service & Maintenance node. Nothing else needs touching:
- * the desktop flyout and the mobile accordion both render from this tree.
+ * the desktop flyout, the mobile accordion and the footer all render from this
+ * tree, and each page marks its own active trail with `activeFor`.
  *
  * Only routes that exist may appear here. No placeholders for unbuilt pages.
  */
 
 const LIVE = "https://www.actonautowerks.com";
 
+/** Identifies which page is being rendered, so the active state is per-page. */
+export type PageKey = "tire-wheel" | "maintenance";
+
 export type NavNode = {
   label: string;
-  /** Absolute for live-site pages, or a relative route we actually ship. */
+  /** Absolute for live-site pages, or a route we actually ship. */
   href?: string;
   /** True for routes inside this build — never gated by the preview flag. */
   internal?: boolean;
-  /** Marks the page currently being viewed. */
-  current?: boolean;
-  /** Marks an ancestor of the current page. */
+  /** The page this entry represents, if any. */
+  key?: PageKey;
+  /** Marks an ancestor of whichever page is current. */
   ancestor?: boolean;
   children?: NavNode[];
 };
 
 /**
- * The Tire & Wheel page is the document being served, so it links to itself
- * relatively. "./" resolves correctly at the dev root and under the GitHub
- * Pages project base (/ACTON_SERVICE/) without assuming root-domain routing.
+ * Routes are written relative to the site root and resolved per page at render
+ * time, so the same tree works at the dev root, under the GitHub Pages project
+ * base (/ACTON_SERVICE/) and from a nested route — without assuming
+ * root-domain routing.
  */
-export const TIRE_AND_WHEEL_ROUTE = "./";
+export const ROUTES: Record<PageKey, string> = {
+  "tire-wheel": "",
+  maintenance: "maintenance-service-intervals/",
+};
+
+/**
+ * Prefix that walks from the page being rendered back to the site root.
+ * The Tire & Wheel page is at the root, the maintenance page is one level down.
+ */
+export function rootPrefix(current: PageKey): string {
+  return current === "tire-wheel" ? "./" : "../";
+}
+
+/** Resolves a page key to a link that works from the current page. */
+export function routeFrom(current: PageKey, target: PageKey): string {
+  return rootPrefix(current) + ROUTES[target];
+}
 
 export const MENU: NavNode[] = [
   { label: "Home", href: `${LIVE}/` },
@@ -43,15 +64,15 @@ export const MENU: NavNode[] = [
         href: `${LIVE}/service-maintenance/`,
         ancestor: true,
         children: [
+          { label: "Tire & Wheel Service", internal: true, key: "tire-wheel" },
           {
-            label: "Tire & Wheel Service",
-            href: TIRE_AND_WHEEL_ROUTE,
+            label: "Maintenance & Service Intervals",
             internal: true,
-            current: true,
+            key: "maintenance",
           },
           /* Next approved pages join here as each one is built:
-             Maintenance & Service Intervals, European Car Repair Specialists,
-             Electrical Systems, Auto Body Services, Transmission Service. */
+             European Car Repair Specialists, Electrical Systems,
+             Auto Body Services, Transmission Service. */
         ],
       },
       { label: "Performance", href: `${LIVE}/performance/` },
@@ -69,12 +90,8 @@ export const FOOTER_SERVICES: NavNode[] = [
     href: `${LIVE}/service-maintenance/`,
     ancestor: true,
   },
-  {
-    label: "Tire & Wheel Service",
-    href: TIRE_AND_WHEEL_ROUTE,
-    internal: true,
-    current: true,
-  },
+  { label: "Tire & Wheel Service", internal: true, key: "tire-wheel" },
+  { label: "Maintenance & Service Intervals", internal: true, key: "maintenance" },
   { label: "Performance", href: `${LIVE}/performance/` },
   { label: "Paint Protection Film", href: `${LIVE}/paint-protection-film/` },
   { label: "Ceramic Coating", href: `${LIVE}/ceramic-coating/` },

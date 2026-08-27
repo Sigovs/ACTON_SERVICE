@@ -11,7 +11,7 @@ import {
   PinIcon,
   SubArrowIcon,
 } from "./icons";
-import { MENU, type NavNode } from "./site-nav";
+import { MENU, type NavNode, type PageKey } from "./site-nav";
 import { navLink } from "./site-links";
 
 const CDN = "https://www.actonautowerks.com/wp-content/uploads";
@@ -24,21 +24,29 @@ const MAPS = "https://maps.app.goo.gl/Rsuie6ei9bPKs1Gm8";
 
 /** Flattens a node and its children into the single desktop flyout panel, so
  *  nesting never becomes a second popup that could shift the header row. */
-function FlyoutItems({ nodes, depth = 0 }: { nodes: NavNode[]; depth?: number }) {
+function FlyoutItems({
+  nodes,
+  depth = 0,
+  current,
+}: {
+  nodes: NavNode[];
+  depth?: number;
+  current: PageKey;
+}) {
   return (
     <>
       {nodes.map((node) => (
         <li key={node.label}>
           <a
-            {...navLink(node)}
+            {...navLink(node, current)}
             data-depth={depth}
-            aria-current={node.current ? "page" : undefined}
+            aria-current={node.key === current ? "page" : undefined}
           >
             {node.label}
           </a>
           {node.children ? (
             <ul>
-              <FlyoutItems nodes={node.children} depth={depth + 1} />
+              <FlyoutItems nodes={node.children} depth={depth + 1} current={current} />
             </ul>
           ) : null}
         </li>
@@ -54,10 +62,12 @@ function MobileItems({
   panelOpen,
   expanded,
   toggle,
+  current,
 }: {
   nodes: NavNode[];
   depth: number;
   panelOpen: boolean;
+  current: PageKey;
   expanded: Record<string, boolean>;
   toggle: (key: string) => void;
 }) {
@@ -70,9 +80,9 @@ function MobileItems({
           return (
             <li key={node.label}>
               <a
-                {...navLink(node)}
+                {...navLink(node, current)}
                 data-depth={depth}
-                aria-current={node.current ? "page" : undefined}
+                aria-current={node.key === current ? "page" : undefined}
                 tabIndex={reachable ? undefined : -1}
               >
                 {node.label}
@@ -88,9 +98,9 @@ function MobileItems({
             <div className="aaw-mobilenav-row" data-depth={depth}>
               {node.href ? (
                 <a
-                  {...navLink(node)}
+                  {...navLink(node, current)}
                   data-section={node.ancestor ? "current" : undefined}
-                  aria-current={node.current ? "page" : undefined}
+                  aria-current={node.key === current ? "page" : undefined}
                   tabIndex={reachable ? undefined : -1}
                 >
                   {node.label}
@@ -120,6 +130,7 @@ function MobileItems({
                 panelOpen={panelOpen && isOpen}
                 expanded={expanded}
                 toggle={toggle}
+                current={current}
               />
             </ul>
           </li>
@@ -129,7 +140,7 @@ function MobileItems({
   );
 }
 
-export default function SiteHeader() {
+export default function SiteHeader({ current }: { current: PageKey }) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [flyout, setFlyout] = useState<string | null>(null);
@@ -264,12 +275,12 @@ export default function SiteHeader() {
                       <SubArrowIcon />
                     </button>
                     <ul className="aaw-subnav">
-                      <FlyoutItems nodes={item.children} />
+                      <FlyoutItems nodes={item.children} current={current} />
                     </ul>
                   </li>
                 ) : (
                   <li key={item.label}>
-                    <a {...navLink(item)}>{item.label}</a>
+                    <a {...navLink(item, current)}>{item.label}</a>
                   </li>
                 ),
               )}
@@ -308,6 +319,7 @@ export default function SiteHeader() {
             panelOpen={open}
             expanded={expanded}
             toggle={toggleBranch}
+            current={current}
           />
         </ul>
       </nav>
