@@ -67,21 +67,35 @@ export default function TransmissionPage() {
           </div>
         </section>
 
-        {/* 3 — Service range, stepped like a shift gate --------------------- */}
+        {/* 3 — The unit itself, against a numbered service ledger ----------- */}
         <section className="aaw-section aaw-tx-services">
-          <div className="aaw-shell">
-            <h2 data-reveal="left" data-reveal-text>
-              {SERVICES.heading}
-            </h2>
-            <ol className="aaw-tx-gate">
+          <div className="aaw-shell aaw-tx-services-grid">
+            <div className="aaw-tx-services-lead">
+              <h2 data-reveal="up">{SERVICES.heading}</h2>
+              <figure className="aaw-tx-object" data-reveal="object">
+                {/* Glow only — no card, frame or pedestal. It precedes the
+                    image in the DOM, so it paints behind without needing a
+                    negative z-index that would escape this stacking context. */}
+                <span className="aaw-tx-glow" aria-hidden="true" />
+                <img
+                  src="/transmission-cutout.webp"
+                  alt="An automatic transmission unit, showing its torque converter housing, valve body and output shaft."
+                  width={1122}
+                  height={1105}
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+
+            {/* An ordered list carries the sequence for assistive technology,
+                so the printed numerals are decorative and hidden from it. */}
+            <ol className="aaw-tx-ledger">
               {SERVICES.items.map((item, index) => (
-                <li
-                  key={item}
-                  data-step={index % 2 === 0 ? "left" : "right"}
-                  data-reveal={index % 2 === 0 ? "left" : "right"}
-                  data-reveal-delay={String(Math.min(index % 3, 2))}
-                >
-                  <span className="aaw-tx-gate-label">{item}</span>
+                <li key={item} data-reveal data-reveal-delay={String(Math.min(index, 5))}>
+                  <span className="aaw-tx-ledger-num" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="aaw-tx-ledger-label">{item}</span>
                 </li>
               ))}
             </ol>
@@ -104,15 +118,22 @@ export default function TransmissionPage() {
           </div>
         </section>
 
-        {/* 5 — Wide underbody pause ---------------------------------------- */}
-        <section className="aaw-tx-break" aria-hidden="true" />
-
         {/* 6 — Trust -------------------------------------------------------- */}
-        <section className="aaw-section aaw-tx-trust">
+        <section className="aaw-section aaw-phototrust aaw-tx-trust">
           <div className="aaw-shell">
             {/* Nested rather than sharing the shell element, so the max-width
                 does not inherit `margin-inline: auto` and centre the column. */}
-            <div className="aaw-tx-trust-inner">
+            <div className="aaw-phototrust-inner">
+              {/* Same device as the Electrical band: the shared ring, left
+                  aligned on the copy's own edge. */}
+              <div className="aaw-trustbadge" data-reveal="up">
+                <svg className="aaw-trustbadge-ring" viewBox="0 0 240 240" aria-hidden="true">
+                  <circle className="aaw-trustbadge-track" cx="120" cy="120" r="117" />
+                  <circle className="aaw-trustbadge-arc" cx="120" cy="120" r="117" />
+                </svg>
+                <strong>20+</strong>
+                <span>Years combined experience</span>
+              </div>
               <h2 data-reveal="left" data-reveal-text>
                 {TRUST.heading}
               </h2>

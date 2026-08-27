@@ -49,35 +49,49 @@ const JOBS = [
   },
   {
     out: "autobody-hero.webp",
-    from: "european-source/break-workshop.png",
-    /* Whole car bodies in a calm, warm bay, with the right side clear for the
-       hero copy. No active mechanical work, and nothing that could read as
-       collision imagery. */
-    crop: { left: 460, top: 181, width: 1455, height: 591 },
+    from: "Auto Body Services in Acton_hero.jpg",
+    /* Delivered hero, 1920x800 native. Paintless dent removal in progress —
+       one of the page's own approved services — with the left third dark and
+       empty for the title. Replaces the borrowed workshop crop, which shared
+       its photograph with the European page's band. */
+    crop: null,
     quality: 86,
   },
   {
     out: "autobody-panel.webp",
-    from: "Regular maintenance is the single best way to extend the life of your vehicle and keep it running the way it should..png",
-    /* Native 977x550: clean body contours and panel reflections, used inset at
-       its own resolution rather than stretched across a full-bleed band. */
+    from: "Auto Body Services in Acton_restoration.jpg",
+    /* Delivered restoration frame, 1889x1083 native — a classic BMW with the
+       sill worked back to bare metal, which is what the approved Restoration
+       copy actually describes. Replaces the borrowed maintenance shot, which
+       shared its photograph with the Maintenance page's intro. */
     crop: null,
-    quality: 88,
-  },
-  {
-    out: "transmission-hero.webp",
-    from: "european-source/mercedes-air-suspension.png",
-    /* Atmosphere only: a car raised with a technician underneath, sitting
-       behind the hero's 0.7 overlay. */
-    crop: { left: 0, top: 60, width: 1122, height: 760 },
     quality: 86,
   },
   {
-    out: "transmission-break.webp",
-    from: "european-source/landrover-underbody.png",
-    /* The most drivetrain-credible underbody in the local set, so it takes the
-       dominant full-width position on the page. */
-    crop: { left: 0, top: 540, width: 1122, height: 520 },
+    out: "transmission-hero.webp",
+    from: "Transmission Service in Acton, MA_hero.jpg",
+    /* Delivered hero, 1920x800 native: a vehicle raised with the technician
+       working underneath and the fluid-exchange rig in frame. Left third dark
+       and empty for the title. */
+    crop: null,
+    quality: 86,
+  },
+  {
+    out: "transmission-cutout.webp",
+    from: "transmission-services-cutout.png",
+    /* Transparent cut-out, 1122x1105 native, alpha preserved — never flattened
+       and never cropped. Sits straight on the dark section with a CSS glow
+       behind it, so it must keep its alpha channel. */
+    crop: null,
+    quality: 90,
+  },
+  {
+    out: "transmission-trust.webp",
+    from: "Transmission Service in Acton, MA_hero why trust.jpg",
+    /* Delivered 1920x960: a technician showing the tablet to a customer, which
+       is what the approved trust copy describes. The copy sits over its lower
+       left, so the readability gradient is CSS. */
+    crop: null,
     quality: 86,
   },
   {
@@ -133,7 +147,11 @@ for (const job of JOBS) {
   }
   if (job.brighten) pipeline = pipeline.modulate({ brightness: job.brighten });
   const target = path.join(OUT, job.out);
-  await pipeline.webp({ quality: job.quality, effort: 5 }).toFile(target);
+  await pipeline
+    /* alphaQuality stays at full for every job: it is a no-op on an opaque
+       image, and lowering it would quietly degrade the transparent cut-outs. */
+    .webp({ quality: job.quality, alphaQuality: 100, effort: 5 })
+    .toFile(target);
   const done = await sharp(target).metadata();
   console.log(
     `  ${job.out.padEnd(26)} ${String(done.width).padStart(4)}x${String(done.height).padEnd(4)} ` +

@@ -33,6 +33,10 @@ export const SYMBOLS = {
   audio: "graphic_eq",
   gauge: "speed",
   software: "system_update",
+  /* Auto Body */
+  dentRemoval: "healing",
+  rustPrevention: "shield",
+  undercoating: "layers",
 } as const;
 
 export type SymbolName = (typeof SYMBOLS)[keyof typeof SYMBOLS];

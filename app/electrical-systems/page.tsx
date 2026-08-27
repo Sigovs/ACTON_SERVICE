@@ -152,12 +152,12 @@ export default function ElectricalSystemsPage() {
         {/* 6 — Trust. This carries the page's photographic pause itself, so
                the decorative band that used to sit above it is gone — two
                photographic bands back to back read as one long image. ------ */}
-        <section className="aaw-section aaw-elec-trust">
+        <section className="aaw-section aaw-phototrust aaw-elec-trust">
           <div className="aaw-shell">
             {/* Nested rather than sharing the shell element: a max-width on the
                 shell itself would inherit its `margin-inline: auto` and centre
                 the column against the rest of the page's left-aligned rhythm. */}
-            <div className="aaw-elec-trust-inner">
+            <div className="aaw-phototrust-inner">
               {/* The shared badge, left aligned with the copy rather than
                   centred as it is on the Tire and Maintenance bands. Its ring
                   draws once and flashes as it closes. */}

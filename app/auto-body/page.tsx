@@ -27,6 +27,29 @@ const TRUST = section(BLOCKS, 4, "Why Acton Drivers Trust Us");
 /* The two coordinated routes, in source order. */
 const PATHWAY = [COLLISION, RESTORATION];
 
+/* One verified Material Symbol per approved related service, keyed by the
+   approved wording rather than by position. Every name is confirmed against
+   the Google endpoint and listed in the `icon_names` subset in layout.tsx —
+   an unverified name silently ships the full 659KB face and renders tofu. */
+const RELATED_ICONS = {
+  "Paintless dent removal": SYMBOLS.dentRemoval,
+  Winterization: SYMBOLS.winter,
+  "Rust prevention": SYMBOLS.rustPrevention,
+  Undercoating: SYMBOLS.undercoating,
+  Lubrication: SYMBOLS.oil,
+} as const;
+
+function relatedIcon(item: string) {
+  const icon = RELATED_ICONS[item as keyof typeof RELATED_ICONS];
+  if (!icon) {
+    throw new Error(
+      `No icon mapped for the approved service ${JSON.stringify(item)}. ` +
+        `Add a verified Material Symbol to RELATED_ICONS and to icon_names in layout.tsx.`,
+    );
+  }
+  return icon;
+}
+
 export default function AutoBodyPage() {
   return (
     <>
@@ -110,28 +133,29 @@ export default function AutoBodyPage() {
               <img
                 src="/autobody-panel.webp"
                 alt=""
-                width={977}
-                height={550}
+                width={1889}
+                height={1083}
                 loading="lazy"
               />
             </figure>
           </div>
         </section>
 
-        {/* 6 — Related services, read along one panel line ------------------ */}
+        {/* 6 — Related services, as a dark break of icon cards -------------- */}
         <section className="aaw-section aaw-body-related">
           <div className="aaw-shell">
             <h2 data-reveal="left" data-reveal-text>
               {RELATED.heading}
             </h2>
-            <ul className="aaw-body-related-list">
+            {/* Reveal on the <li>, hover on the card inside it — the two would
+                otherwise fight over the same `transform`. */}
+            <ul className="aaw-body-cards">
               {RELATED.items.map((item, index) => (
-                <li
-                  key={item}
-                  data-reveal="up"
-                  data-reveal-delay={String(Math.min(index, 2))}
-                >
-                  {item}
+                <li key={item} data-reveal data-reveal-delay={String(index)}>
+                  <div className="aaw-body-card">
+                    <MaterialSymbol name={relatedIcon(item)} tone="ledger" />
+                    <span>{item}</span>
+                  </div>
                 </li>
               ))}
             </ul>
