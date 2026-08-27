@@ -24,6 +24,31 @@ if (!fs.existsSync(DIST)) {
   process.exit(1);
 }
 
+/* A failed build leaves the previous `dist/` in place, so this script would
+   happily snapshot a stale bundle and every measurement taken afterwards would
+   describe the wrong page. That has happened twice. Refuse when any source is
+   newer than the build output. */
+function newestMtime(dir, skip = /node_modules|\.git/) {
+  let newest = 0;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (skip.test(entry.name)) continue;
+    const full = path.join(dir, entry.name);
+    const stat = fs.statSync(full);
+    newest = Math.max(newest, entry.isDirectory() ? newestMtime(full, skip) : stat.mtimeMs);
+  }
+  return newest;
+}
+
+const builtAt = newestMtime(DIST);
+const sourceAt = Math.max(newestMtime(path.join(ROOT, "app")), newestMtime(path.join(ROOT, "public")));
+if (sourceAt > builtAt) {
+  console.error(
+    "dist/client is older than app/ or public/ — the last `npm run build` did not " +
+      "succeed, or was never run. Refusing to snapshot a stale bundle.",
+  );
+  process.exit(1);
+}
+
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /** A leftover server on this port would silently serve a stale build. */

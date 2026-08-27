@@ -109,11 +109,17 @@ export default function ElectricalSystemsPage() {
             <h2 data-reveal="left" data-reveal-text>
               {SERVICES.heading}
             </h2>
+            {/* The reveal rides each <li> and the hover lift rides the card
+                inside it. Sharing one element would put both on the same
+                `transform`, where the hover would inherit the reveal's 820ms
+                timing and lose to the revealed rule's specificity. */}
             <ul className="aaw-elec-cards">
               {SERVICES.items.map((item, index) => (
                 <li key={item} data-reveal="pop" data-reveal-delay={String(index)}>
-                  <MaterialSymbol name={iconFor(item)} tone="ledger" />
-                  <span>{item}</span>
+                  <div className="aaw-elec-card">
+                    <MaterialSymbol name={iconFor(item)} tone="ledger" />
+                    <span>{item}</span>
+                  </div>
                 </li>
               ))}
             </ul>

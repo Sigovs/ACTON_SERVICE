@@ -2772,6 +2772,36 @@ h3 {
   }
 }
 
+/* Three off-centre radial washes at different sizes, so the ground is lit
+   unevenly rather than flat. Teal only, and kept well short of reading as a
+   neon tech gradient. */
+.aaw-elec-services {
+  position: relative;
+  background-color: #12171a;
+  background-image: radial-gradient(
+      118% 86% at 16% 4%,
+      rgba(11, 92, 127, 0.38) 0%,
+      rgba(11, 92, 127, 0) 58%
+    ),
+    radial-gradient(
+      72% 62% at 88% 24%,
+      rgba(120, 205, 245, 0.14) 0%,
+      rgba(120, 205, 245, 0) 64%
+    ),
+    radial-gradient(
+      140% 110% at 64% 112%,
+      rgba(11, 92, 127, 0.28) 0%,
+      rgba(11, 92, 127, 0) 56%
+    );
+  color: var(--aaw-on-dark);
+  border-top: 1px solid rgba(192, 215, 224, 0.16);
+}
+
+.aaw-elec-services h2 {
+  color: var(--aaw-white);
+  max-width: 620px;
+}
+
 /* Capability cards. Distinct from the Tire page's white number cards and the
    Maintenance ledger's teal rows: graphite panels on the dark band, each
    opened by a short teal rule that keeps a trace of the page's own motif. */
@@ -2786,12 +2816,41 @@ h3 {
 
 .aaw-elec-cards li {
   display: flex;
+}
+
+.aaw-elec-card {
+  display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 22px;
   padding: 30px 26px 34px;
   background: #191f23;
   border-top: 2px solid var(--aaw-primary);
   border-radius: 10px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s;
+}
+
+/* Affordance only — the cards are not links. A small lift and a teal glow that
+   reads as the card catching the light, not as a neon edge. */
+.aaw-elec-card:hover {
+  transform: translateY(-6px);
+  background: #1d2429;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45), 0 0 22px rgba(11, 92, 127, 0.4);
+}
+
+.aaw-elec-card:hover .aaw-symbol[data-tone="ledger"] {
+  background: rgba(120, 205, 245, 0.18);
+  color: var(--aaw-tint);
+}
+
+/* The lift is motion; the glow is not. Keep the glow, drop the travel. */
+@media (prefers-reduced-motion: reduce) {
+  .aaw-elec-card,
+  .aaw-elec-card:hover {
+    transform: none;
+    transition: box-shadow 0.35s, background-color 0.35s;
+  }
 }
 
 .aaw-elec-cards .aaw-symbol {
@@ -2804,7 +2863,7 @@ h3 {
   font-size: 28px;
 }
 
-.aaw-elec-cards li > span:last-child {
+.aaw-elec-card > span:last-child {
   color: var(--aaw-white);
   font-size: 16px;
   font-weight: 600;
