@@ -256,10 +256,10 @@ export default function TireAndWheelServicePage() {
             </div>
             <figure className="aaw-split-figure" data-reveal="left">
               <img
-                src={`${CDN}/2026/06/tire-and-wheel-service-img.webp`}
-                alt="Wheel and tire work underway on a vehicle in the Acton Autowerks shop."
-                width={430}
-                height={245}
+                src="/tire-wheel-alignment.jpg"
+                alt="Acton Autowerks technician fitting alignment target heads to the wheel of a blue Porsche 911 on the alignment rack."
+                width={1672}
+                height={941}
                 loading="lazy"
               />
             </figure>
