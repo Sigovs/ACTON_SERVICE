@@ -126,13 +126,13 @@ export default function AutoBodyPage() {
 
         {/* 5 — Inset panel. Held to the image's own width rather than stretched
                across a full-bleed band, which keeps this page's silhouette its
-               own. Decorative: the copy carries the meaning. --------------- */}
+               own. ---------------------------------------------------------- */}
         <section className="aaw-section aaw-pattern aaw-body-panel">
           <div className="aaw-shell">
-            <figure className="aaw-body-panel-figure" data-reveal="up" aria-hidden="true">
+            <figure className="aaw-body-panel-figure" data-reveal="up">
               <img
                 src="/autobody-panel.webp"
-                alt=""
+                alt="A classic BMW at a partner restoration shop, with a lower body panel worked back to bare metal."
                 width={1889}
                 height={1083}
                 loading="lazy"

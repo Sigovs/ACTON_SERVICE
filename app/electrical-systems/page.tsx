@@ -89,12 +89,12 @@ export default function ElectricalSystemsPage() {
             <p className="aaw-elec-lede" data-reveal="up">
               {INTRO}
             </p>
-            {/* Decorative: a cut-out of the equipment the copy describes. It
-                sits straight on the section pattern, with no frame. */}
-            <figure className="aaw-elec-intro-figure" data-reveal="right" aria-hidden="true">
+            {/* The equipment the copy describes, sitting straight on the
+                section pattern with no frame. */}
+            <figure className="aaw-elec-intro-figure" data-reveal="right">
               <img
                 src="/electrical-intro.webp"
-                alt=""
+                alt="An instrument cluster, an engine control module, a diagnostic scope with probes, and a wiring harness."
                 width={349}
                 height={262}
                 loading="lazy"
