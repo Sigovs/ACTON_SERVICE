@@ -120,14 +120,14 @@ export default function EuropeanCarRepairPage() {
                     data-tone={index % 3 === 1 ? "graphite" : "light"}
                   >
                     <header className="aaw-euro-chapter-head">
-                      <h2 data-reveal="left" data-reveal-text>
-                        {chapter.name} <span>{chapter.tagline}</span>
-                      </h2>
-                      {/* Decorative: the marque is already announced by the
-                          heading, so the plate adds nothing for a screen
-                          reader. Give it real alt text only if the final
-                          photography carries information the copy does not. */}
-                      {/* The wipe lives on the inner element, never on the
+                      {/* Placed first so it leads once the head stacks on
+                          narrow screens, where it must sit above the heading
+                          to reach the seam; grid placement keeps it on the
+                          right at desktop. Decorative either way — the heading
+                          already announces the marque, and the photography is
+                          of the work rather than of any badge or wordmark.
+
+                          The wipe lives on the inner element, never on the
                           observed one: a clip-path that collapses the box to
                           zero area also collapses its intersection ratio, and
                           the reveal threshold would never be met. */}
@@ -136,12 +136,15 @@ export default function EuropeanCarRepairPage() {
                           <img
                             src={`/brand-${slug(chapter.name.replace(/ Repair$/, ""))}.webp`}
                             alt=""
-                            width={480}
-                            height={600}
+                            width={960}
+                            height={540}
                             loading="lazy"
                           />
                         </span>
                       </figure>
+                      <h2 data-reveal="left" data-reveal-text>
+                        {chapter.name} <span>{chapter.tagline}</span>
+                      </h2>
                     </header>
 
                     {before.map((block) => (

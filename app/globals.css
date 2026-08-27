@@ -2438,28 +2438,34 @@ h3 {
 }
 
 .aaw-euro-chapter-head {
-  position: relative;
-  /* Reserves the plate's footprint so it can never sit on the copy: the
-     min-height clears its lower half, the padding clears the heading. */
-  min-height: 140px;
-  margin-bottom: 22px;
-  padding-right: 200px;
+  /* Heading left, plate right. A grid rather than absolute positioning, so
+     the plate can be a real photograph at a real size and the head simply
+     grows to hold it. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 480px;
+  align-items: start;
+  gap: 40px;
+  margin-bottom: 26px;
+}
+
+.aaw-euro-chapter-head h2 {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 /* Marque plate ------------------------------------------------------------
    Hung across the chapter's own top edge rather than placed beside or above
-   the text, so each marque breaks its own seam. */
+   the text, so each marque breaks its own seam. The subject is the work —
+   never a badge or a wordmark, which would imply a dealer relationship the
+   copy does not claim. */
 
 .aaw-euro-plate {
-  position: absolute;
-  /* 56px of chapter padding plus 30px, so the plate crosses the chapter seam
-     and lands in the previous chapter's bottom padding — never on its copy. */
-  top: -86px;
-  right: 0;
-  z-index: 2;
-  width: 168px;
-  aspect-ratio: 4 / 5;
-  margin: 0;
+  grid-column: 2;
+  grid-row: 1;
+  /* 56px of chapter padding plus 30px, so the plate crosses the seam and
+     lands in the previous chapter's bottom padding — never on its copy. */
+  margin: -86px 0 0;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 10px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
@@ -2476,26 +2482,26 @@ h3 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.14);
+  transform: scale(1.12);
 }
 
-/* Entry: the frame settles out of its tilt while a shutter opens inside it,
-   alternating side to side down the stream. Specificity clears the generic
+/* Entry: the frame settles out of a slight tilt while a shutter opens across
+   it, alternating direction down the stream. Specificity clears the generic
    reveal rules outright, so this does not depend on source order. */
 :root[data-motion="on"] .aaw-euro-plate[data-reveal] {
-  --plate-tilt: -3.5deg;
-  transform: translateY(26px) rotate(var(--plate-tilt)) scale(1.05);
+  --plate-tilt: -2deg;
+  transform: translateY(22px) rotate(var(--plate-tilt)) scale(1.03);
   transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 950ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .aaw-euro-chapter:nth-of-type(even) .aaw-euro-plate {
-  --plate-tilt: 3.5deg;
+  --plate-tilt: 2deg;
 }
 
 :root[data-motion="on"] .aaw-euro-plate[data-reveal] .aaw-euro-plate-inner {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 950ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1000ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
 }
 
 :root[data-motion="on"] .aaw-euro-plate[data-reveal][data-revealed="true"] {
@@ -2522,11 +2528,11 @@ h3 {
 
 @keyframes aaw-plate-drift {
   from {
-    transform: translateY(-7%) scale(1.14);
+    transform: translateY(-5%) scale(1.12);
   }
 
   to {
-    transform: translateY(7%) scale(1.14);
+    transform: translateY(5%) scale(1.12);
   }
 }
 
@@ -2645,13 +2651,8 @@ h3 {
   }
 
   .aaw-euro-chapter-head {
-    min-height: 100px;
-    padding-right: 156px;
-  }
-
-  .aaw-euro-plate {
-    top: -86px;
-    width: 132px;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 28px;
   }
 }
 
@@ -2660,15 +2661,23 @@ h3 {
     padding: 40px 0;
   }
 
+  /* Stacked: the plate leads, so it still reaches the seam, and the heading
+     follows underneath at full width. */
   .aaw-euro-chapter-head {
-    min-height: 80px;
-    padding-right: 116px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .aaw-euro-chapter-head h2 {
+    grid-column: 1;
+    grid-row: 2;
   }
 
   .aaw-euro-plate {
+    grid-column: 1;
+    grid-row: 1;
     /* Chapter padding drops to 40px here. */
-    top: -62px;
-    width: 100px;
+    margin-top: -62px;
     border-radius: 8px;
   }
 
