@@ -194,11 +194,13 @@ h3 {
   min-height: 41px;
 }
 
+/* Live pulls the inline list out by half its 40px item gap so the first icon
+   sits flush with the 1350 container edge instead of 20px inside it. */
 .aaw-utility-list {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin: 0;
+  margin: 0 -20px;
   padding: 0;
   list-style: none;
 }

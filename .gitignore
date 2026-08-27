@@ -46,3 +46,6 @@ next-env.d.ts
 /outputs/
 acton-tire-wheel-local.zip
 popup_renovation.png
+
+# generated preview snapshot
+/.pages/
