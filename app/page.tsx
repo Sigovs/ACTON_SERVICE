@@ -166,9 +166,9 @@ export default function TireAndWheelServicePage() {
             </div>
             <figure className="aaw-split-figure">
               <img
-                src={`${CDN}/2026/06/service-about-2.webp`}
-                alt="Technician servicing a black Porsche SUV on a vehicle lift at Acton Autowerks in Acton, MA."
-                width={575}
+                src="/tire-wheel-intro.jpg"
+                alt="Acton Autowerks technician removing a wheel from a Porsche 911 on a lift, with the wheel and tire standing in the foreground."
+                width={572}
                 height={572}
                 loading="lazy"
               />
