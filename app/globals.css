@@ -1368,6 +1368,9 @@ h3 {
   height: 236px;
   margin-bottom: 6px;
   color: var(--aaw-white);
+  /* The badge centres its own text rather than inheriting it. Without this the
+     wrapped label goes ragged wherever the surrounding copy is left aligned. */
+  text-align: center;
 }
 
 .aaw-trustbadge-ring {
@@ -1406,12 +1409,44 @@ h3 {
 
 :root[data-motion="on"] .aaw-trustbadge[data-revealed="true"] .aaw-trustbadge-arc {
   stroke-dashoffset: 0;
+  /* Fires as the ring closes: 160ms reveal delay + 1400ms draw. */
+  animation: aaw-badge-spark 2400ms ease-out 1560ms 1;
+}
+
+/* The ring closing is the only moment this page animates colour, so the flash
+   is short and returns to the tint on its own — no state is left behind. */
+@keyframes aaw-badge-spark {
+  0% {
+    stroke: var(--aaw-tint);
+    filter: none;
+  }
+
+  12% {
+    stroke: #6fd8ff;
+    filter: drop-shadow(0 0 5px rgba(93, 200, 255, 0.95))
+      drop-shadow(0 0 16px rgba(45, 160, 255, 0.75));
+  }
+
+  45% {
+    stroke: #6fd8ff;
+    filter: drop-shadow(0 0 4px rgba(93, 200, 255, 0.7))
+      drop-shadow(0 0 12px rgba(45, 160, 255, 0.45));
+  }
+
+  100% {
+    stroke: var(--aaw-tint);
+    filter: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root[data-motion="on"] .aaw-trustbadge-arc {
     stroke-dashoffset: 0;
     transition: none;
+  }
+
+  :root[data-motion="on"] .aaw-trustbadge[data-revealed="true"] .aaw-trustbadge-arc {
+    animation: none;
   }
 }
 
@@ -1866,10 +1901,12 @@ h3 {
   padding-right: max(var(--aaw-gutter), calc(50vw - var(--aaw-max) / 2));
 }
 
+/* One large sweep on the corner that faces the copy, echoing the hero's
+   `0 0 250px 0`; the other three corners stay square against the bleed. */
 .aaw-introband-figure {
   margin: 0;
   overflow: hidden;
-  border-radius: 0 30px 30px 0;
+  border-radius: 0 250px 0 0;
 }
 
 .aaw-introband-figure img {
@@ -1898,8 +1935,10 @@ h3 {
     padding-right: 0;
   }
 
+  /* Stacked, the figure spans the full width, so the sweep moves to the
+     bottom-right where the copy now sits. */
   .aaw-introband-figure {
-    border-radius: 0 0 30px 0;
+    border-radius: 0 0 160px 0;
   }
 
   .aaw-introband-copy {
@@ -1924,34 +1963,32 @@ h3 {
   align-items: start;
 }
 
-.aaw-ledger-head {
-  position: relative;
+/* The parts cut-out is the left column on its own, optically centred against
+   the whole ledger rather than against the heading. */
+.aaw-ledger-figure {
+  margin: 0;
+  align-self: center;
+}
+
+.aaw-ledger-figure img {
+  display: block;
+  width: 100%;
+  max-width: 515px;
+  height: auto;
+  margin-inline: auto;
+}
+
+.aaw-ledger-body {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 34px;
+  min-width: 0;
 }
 
-.aaw-ledger-head h2 {
+.aaw-ledger-body h2 {
+  /* Holds the two-line break the layout is composed around. */
+  max-width: 480px;
   color: var(--aaw-white);
-}
-
-/* One oversized mark rather than a photograph, so the section stays a ledger
-   and the rows remain the subject. */
-.aaw-ledger-mark {
-  display: block;
-  color: var(--aaw-white);
-  opacity: 0.16;
-}
-
-.aaw-ledger-mark .material-symbols-sharp {
-  font-family: "Material Symbols Sharp";
-  font-size: 190px;
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 40;
-  line-height: 1;
-}
-
-:root:not([data-icons="ready"]) .aaw-ledger-mark .material-symbols-sharp {
-  visibility: hidden;
 }
 
 .aaw-ledger-list {
@@ -1995,8 +2032,18 @@ h3 {
     gap: 36px;
   }
 
-  .aaw-ledger-mark .material-symbols-sharp {
-    font-size: 120px;
+  /* Heading first once the columns stack, so the section still opens on its
+     title rather than on the photograph. */
+  .aaw-ledger-figure {
+    order: 2;
+  }
+
+  .aaw-ledger-figure img {
+    max-width: 400px;
+  }
+
+  .aaw-ledger-body h2 {
+    max-width: none;
   }
 }
 
@@ -2005,12 +2052,25 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .aaw-ledger-mark {
-    display: none;
+  .aaw-ledger-figure img {
+    max-width: 300px;
   }
 }
 
 /* 4 — Interval scene ------------------------------------------------------ */
+
+/* Held to the asset's native width — upscaling a 366px cut-out would soften
+   the dial faces, which are the whole point of the image. */
+.aaw-intervals-figure {
+  margin: 0 auto 26px;
+  max-width: 366px;
+}
+
+.aaw-intervals-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 
 .aaw-intervals-track {
   display: grid;
@@ -2112,113 +2172,47 @@ h3 {
   }
 }
 
-/* 5 — Dark photographic split trust --------------------------------------- */
+/* 5 — Full-bleed photographic trust band ---------------------------------- */
 
-.aaw-trustsplit {
-  display: grid;
-  grid-template-columns: 58fr 42fr;
-  width: 100%;
-  min-height: 760px;
-  overflow: clip;
-  background: var(--aaw-black);
+/* Reuses the Tire page band. Only the photograph and the copy alignment
+   differ: this frame keeps its empty, unlit half on the left, so the copy
+   sits there instead of centred. */
+.aaw-trustband--maintenance {
+  background-image: url("/maintenance-trust.webp");
 }
 
-.aaw-trustsplit-media {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Absolute so the image fills the grid cell exactly and object-fit actually
-   crops. With height:100% alone the cell has no definite height, the value
-   falls back to auto, and a square source would set the section height. */
-.aaw-trustsplit-media img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* Softens the seam so the two halves read as one section rather than two
-   unrelated cards. */
-.aaw-trustsplit-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+/* A directional veil rather than the centred one: it deepens the left so the
+   copy holds at any crop, and stays light over the car on the right. */
+.aaw-trustband--maintenance::before {
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.25) 0%,
-    rgba(0, 0, 0, 0.05) 40%,
-    rgba(0, 0, 0, 0.55) 100%
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.5) 38%,
+    rgba(0, 0, 0, 0.18) 66%,
+    rgba(0, 0, 0, 0.1) 100%
   );
 }
 
-.aaw-trustsplit-panel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 22px;
-  padding: 60px clamp(24px, 5vw, 72px);
-  background: var(--aaw-black);
-  color: var(--aaw-on-dark);
-}
-
-.aaw-trustsplit-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 520px;
+.aaw-trustband--maintenance .aaw-trustband-copy {
+  align-items: flex-start;
+  max-width: 680px;
+  margin-inline: 0;
   text-align: left;
 }
 
-.aaw-trustsplit-panel h2 {
-  color: var(--aaw-white);
-}
-
-/* Badge straddles the seam between photograph and panel. */
-.aaw-trustbadge--seam {
-  width: 150px;
-  height: 150px;
-  margin-left: -108px;
-  gap: 0;
-}
-
-.aaw-trustbadge--seam strong {
-  font-size: 34px;
-  line-height: 44px;
-}
-
 @media (max-width: 1024px) {
-  .aaw-trustsplit {
-    grid-template-columns: 1fr;
-    min-height: 0;
-  }
-
-  .aaw-trustsplit-media {
-    min-height: 320px;
-  }
-
-  .aaw-trustsplit-media::after {
+  /* Cover crops toward the centre here, so the car sits behind the copy and
+     the veil has to carry the whole contrast job. */
+  .aaw-trustband--maintenance::before {
     background: linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0.2) 0%,
-      rgba(0, 0, 0, 0.1) 45%,
-      rgba(0, 0, 0, 0.7) 100%
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.66) 55%,
+      rgba(0, 0, 0, 0.78) 100%
     );
   }
 
-  .aaw-trustsplit-panel {
-    padding: 0 var(--aaw-gutter) var(--aaw-section);
-  }
-
-  .aaw-trustbadge--seam {
-    margin-left: 0;
-    margin-top: -84px;
-  }
-
-  .aaw-trustsplit-copy {
+  .aaw-trustband--maintenance .aaw-trustband-copy {
     max-width: 100%;
   }
 }
@@ -2250,4 +2244,334 @@ h3 {
     grid-template-columns: 1fr;
     gap: 32px;
   }
+}
+
+/* ==========================================================================
+   European Car Repair Specialists — page-specific layouts
+   The shell above is shared and frozen. This page is a hub: a sticky brand
+   index driving a long chapter stream, which is a different silhouette from
+   both Tire & Wheel and Maintenance.
+   ========================================================================== */
+
+.aaw-hero--european {
+  background-image: url("/european-hero.webp");
+}
+
+/* The source gives a single title, so the H1 takes the large display slot
+   instead of the 25/45 subtitle size the other pages use for it. */
+.aaw-hero--european h1 {
+  color: var(--aaw-white);
+  font-size: var(--aaw-display);
+  line-height: var(--aaw-display-lh);
+}
+
+/* 2 — Asymmetric introduction: copy left, image bleeding right ------------ */
+
+.aaw-euro-intro-grid {
+  display: grid;
+  grid-template-columns: 44fr 56fr;
+  align-items: center;
+  gap: 60px;
+  /* Copy stays on the container line; the image runs to the viewport edge. */
+  padding-left: max(var(--aaw-gutter), calc(50vw - var(--aaw-max) / 2));
+}
+
+.aaw-euro-intro-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 620px;
+}
+
+.aaw-euro-intro-figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 30px 0 0 30px;
+}
+
+.aaw-euro-intro-figure img {
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 1024px) {
+  .aaw-euro-intro-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-left: 0;
+  }
+
+  .aaw-euro-intro-copy {
+    width: 100%;
+    max-width: calc(var(--aaw-max) + var(--aaw-gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--aaw-gutter);
+  }
+
+  .aaw-euro-intro-figure {
+    border-radius: 30px 0 0 0;
+  }
+}
+
+/* 3 + 4 — Brand navigator and chapter stream ------------------------------ */
+
+.aaw-euro-hub {
+  position: relative;
+  background: var(--aaw-white);
+  overflow-x: clip;
+}
+
+.aaw-euro-hub-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 60px;
+  align-items: start;
+  padding-block: var(--aaw-section);
+}
+
+/* Sticky index. `align-self: start` keeps it inside the grid track, so it
+   releases naturally at the end of the stream rather than overrunning. */
+.aaw-euro-index {
+  position: sticky;
+  top: 150px;
+  align-self: start;
+}
+
+.aaw-brandnav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aaw-brandnav a {
+  display: block;
+  padding: 12px 16px;
+  border-left: 2px solid rgba(11, 92, 127, 0.18);
+  color: var(--aaw-body);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 28px;
+  transition: color 0.3s, border-color 0.3s, background-color 0.3s;
+}
+
+.aaw-brandnav a:hover {
+  color: var(--aaw-primary);
+  background: rgba(222, 237, 244, 0.5);
+}
+
+.aaw-brandnav a[aria-current="true"] {
+  border-left-color: var(--aaw-primary);
+  color: var(--aaw-primary);
+  background: var(--aaw-tint);
+}
+
+.aaw-euro-stream {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Chapters --------------------------------------------------------------- */
+
+.aaw-euro-chapter {
+  /* Clears the sticky header when a hash link jumps here. */
+  scroll-margin-top: 150px;
+  padding: 56px 0;
+  border-top: 1px solid rgba(11, 92, 127, 0.16);
+}
+
+.aaw-euro-chapter:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* Alternating tone, applied as a full-bleed band behind the chapter so the
+   stream still reads as one system rather than seven unrelated blocks. */
+.aaw-euro-chapter[data-tone="graphite"] {
+  position: relative;
+  border-top: 0;
+  color: var(--aaw-on-dark);
+  padding-inline: 40px;
+}
+
+.aaw-euro-chapter[data-tone="graphite"]::before {
+  content: "";
+  position: absolute;
+  inset: 0 -40px;
+  z-index: -1;
+  border-radius: 10px;
+  background: #1c2226;
+}
+
+.aaw-euro-chapter[data-tone="graphite"] h2,
+.aaw-euro-chapter[data-tone="graphite"] h3 {
+  color: var(--aaw-white);
+}
+
+.aaw-euro-chapter[data-tone="graphite"] .aaw-euro-items li {
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+
+.aaw-euro-chapter-head {
+  margin-bottom: 22px;
+}
+
+/* The marque leads; the source's tagline follows at supporting weight. */
+.aaw-euro-chapter-head h2 span {
+  display: block;
+  color: var(--aaw-primary);
+  font-family: "Montserrat", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 28px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.aaw-euro-chapter[data-tone="graphite"] .aaw-euro-chapter-head h2 span {
+  color: var(--aaw-tint);
+}
+
+.aaw-euro-chapter > p {
+  max-width: 74ch;
+  margin-bottom: 18px;
+}
+
+.aaw-euro-leadin {
+  font-weight: 600;
+}
+
+.aaw-euro-closing {
+  margin-top: 6px;
+}
+
+/* Compact service rows rather than oversized cards — 53 items across the
+   page would otherwise become a card wall. */
+.aaw-euro-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 40px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aaw-euro-items li {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(11, 92, 127, 0.16);
+}
+
+.aaw-euro-items h3 {
+  margin-bottom: 6px;
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.aaw-euro-items p {
+  max-width: 60ch;
+}
+
+@media (max-width: 1199px) {
+  .aaw-euro-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Index becomes a horizontal rail above the stream. */
+@media (max-width: 1024px) {
+  .aaw-euro-hub-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .aaw-euro-index {
+    position: sticky;
+    top: 126px;
+    z-index: 8;
+    margin-inline: calc(var(--aaw-gutter) * -1);
+    padding-block: 10px;
+    background: var(--aaw-white);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.9);
+  }
+
+  .aaw-brandnav ul {
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding-inline: var(--aaw-gutter);
+    scrollbar-width: none;
+  }
+
+  .aaw-brandnav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .aaw-brandnav li {
+    flex: none;
+  }
+
+  .aaw-brandnav a {
+    padding: 8px 16px;
+    border: 1px solid rgba(11, 92, 127, 0.22);
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+
+  .aaw-brandnav a[aria-current="true"] {
+    border-color: var(--aaw-primary);
+  }
+
+  .aaw-euro-chapter {
+    scroll-margin-top: 190px;
+  }
+}
+
+@media (max-width: 767px) {
+  .aaw-euro-chapter {
+    padding: 40px 0;
+  }
+
+  .aaw-euro-chapter[data-tone="graphite"] {
+    padding-inline: 20px;
+  }
+
+  .aaw-euro-chapter[data-tone="graphite"]::before {
+    inset: 0 -20px;
+  }
+}
+
+/* 5 — Full-width photographic break --------------------------------------- */
+
+.aaw-euro-break {
+  width: 100%;
+  min-height: 820px;
+  background-color: var(--aaw-black);
+  background-image: url("/european-break.webp");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width: 1024px) {
+  .aaw-euro-break {
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 767px) {
+  .aaw-euro-break {
+    min-height: 380px;
+  }
+}
+
+/* 6 — CTA ------------------------------------------------------------------ */
+
+/* The source supplies a heading and a button only, so the band carries just
+   those two. */
+.aaw-euro-cta .aaw-shell {
+  gap: 26px;
 }

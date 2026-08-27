@@ -83,6 +83,11 @@ const ROUTES = [
     out: "maintenance-service-intervals/index.html",
     depth: 1,
   },
+  {
+    route: "/european-car-repair/",
+    out: "european-car-repair/index.html",
+    depth: 1,
+  },
 ];
 
 const pages = [];

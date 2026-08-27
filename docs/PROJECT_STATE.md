@@ -106,3 +106,41 @@ Review the rebuilt Tire & Wheel baseline side by side with
 `/service-maintenance/`. Once approved, extract the `Service Page Extension`
 components and apply them to the four remaining focused pages, then build
 European Car Repair Specialists as the hub variant.
+
+## Page 02 — Maintenance & Service Intervals: photography pass (2026-08-27)
+
+Client-supplied photography replaced every placeholder/borrowed image on this
+page, and three sections were recomposed to the supplied section layouts.
+
+| Section | Asset | Source file |
+|---|---|---|
+| Intro band | `maintenance-intro.webp` 977x550 | `Regular maintenance is the single best way…png` |
+| Service ledger | `maintenance-services.webp` 515x476 | `maintannaceservice we offer.png` |
+| Interval scene | `maintenance-intervals.webp` 366x190 | `how offten should you service.png` |
+| Trust band | `maintenance-trust.webp` 1920x960 | `why new england.png` |
+
+Decisions this establishes for the remaining pages:
+
+1. **Cut-outs carry their own glow.** The supplied PNGs bake a soft halo into
+   their alpha, so they sit straight on the section ground with no frame,
+   plate or CSS glow behind them. Same rule as the Tire page cut-outs.
+2. **Cut-outs are never upscaled.** Each figure is capped at the asset's native
+   width (`515px`, `366px`), because these are product shots whose detail is
+   the point.
+3. **The ledger heading moved into the column with its list.** Left column is
+   the photograph alone, optically centred; right column is heading + rows. The
+   heading is capped at `480px` so it keeps its two-line break.
+4. **The intro figure's sweep is `0 250px 0 0`** — the same 250px radius the
+   hero uses on its bottom-right, mirrored to face the copy. It becomes
+   `0 0 160px 0` once the grid stacks.
+5. **`.aaw-trustsplit` is retired.** The trust section now reuses the Tire
+   page's `.aaw-trustband` with a `--maintenance` modifier: same badge, same
+   ring animation, same 960px band. Only the photograph and a left-aligned
+   copy block (`max-width: 680px`) differ, because this frame keeps its dark,
+   unlit half on the left. The veil is directional rather than centred, and
+   flips to vertical at ≤1024 where `cover` crops toward the middle.
+
+Verified at 1920 / 1440 / 1366 / 1024 / 768 / 390: one H1, utility 41, header
+85, logo 98x34, hero 600, zero horizontal overflow, no failed requests, no
+console errors, and the trust copy optically centred at every width (top gap
+equals bottom gap).

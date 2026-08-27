@@ -95,9 +95,9 @@ export default function MaintenanceServiceIntervalsPage() {
             <figure className="aaw-introband-figure" data-reveal="left">
               <img
                 src="/maintenance-intro.webp"
-                alt="Acton Autowerks technician working on a car in the workshop."
-                width={1672}
-                height={941}
+                alt="Acton Autowerks technician working on a car inside the Acton, MA workshop."
+                width={977}
+                height={550}
                 loading="lazy"
               />
             </figure>
@@ -131,26 +131,34 @@ export default function MaintenanceServiceIntervalsPage() {
         {/* 3 — Teal service ledger ----------------------------------------- */}
         <section className="aaw-section aaw-ledger">
           <div className="aaw-shell aaw-ledger-grid">
-            <div className="aaw-ledger-head">
-              <h2 data-reveal="left" data-reveal-text>
+            {/* The cut-out carries its own glow, so it sits straight on the
+                teal with no frame behind it. */}
+            <figure className="aaw-ledger-figure" data-reveal="left">
+              <img
+                src="/maintenance-services.webp"
+                alt="Oil filter, air filter, spark plugs, wiper blade, dipstick and a diagnostic scan tool."
+                width={515}
+                height={476}
+                loading="lazy"
+              />
+            </figure>
+            <div className="aaw-ledger-body">
+              <h2 data-reveal="right" data-reveal-text>
                 Maintenance Services We Offer
               </h2>
-              <span className="aaw-ledger-mark" aria-hidden="true" data-reveal="right">
-                <span className="material-symbols-sharp">{SYMBOLS.tuneUp}</span>
-              </span>
+              <ul className="aaw-ledger-list">
+                {services.map((service, index) => (
+                  <li
+                    key={service.label}
+                    data-reveal="up"
+                    data-reveal-delay={index % 3 === 0 ? undefined : String(index % 3)}
+                  >
+                    <MaterialSymbol name={service.icon} tone="ledger" />
+                    <span>{service.label}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="aaw-ledger-list">
-              {services.map((service, index) => (
-                <li
-                  key={service.label}
-                  data-reveal="up"
-                  data-reveal-delay={index % 3 === 0 ? undefined : String(index % 3)}
-                >
-                  <MaterialSymbol name={service.icon} tone="ledger" />
-                  <span>{service.label}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </section>
 
@@ -158,7 +166,16 @@ export default function MaintenanceServiceIntervalsPage() {
         <section className="aaw-section aaw-pattern aaw-pattern--alt aaw-intervals">
           <div className="aaw-shell">
             <div className="aaw-head">
-              <h2 data-reveal="left" data-reveal-text>
+              <figure className="aaw-intervals-figure" data-reveal="up">
+                <img
+                  src="/maintenance-intervals.webp"
+                  alt="Instrument cluster showing the service wrench indicator."
+                  width={366}
+                  height={190}
+                  loading="lazy"
+                />
+              </figure>
+              <h2 data-reveal="up" data-reveal-delay="1">
                 How Often Should You Service Your Car?
               </h2>
             </div>
@@ -187,26 +204,21 @@ export default function MaintenanceServiceIntervalsPage() {
           </div>
         </section>
 
-        {/* 5 — Dark photographic split trust ------------------------------- */}
-        <section className="aaw-trustsplit">
-          <div className="aaw-trustsplit-media" data-reveal="left">
-            <img
-              src="/maintenance-trust.webp"
-              alt="Acton Autowerks technician servicing a vehicle on a lift in the workshop."
-              width={572}
-              height={572}
-              loading="lazy"
-            />
-          </div>
-          <div className="aaw-trustsplit-panel">
-            <div className="aaw-trustbadge aaw-trustbadge--seam" data-reveal="up">
-              <svg className="aaw-trustbadge-ring" viewBox="0 0 240 240" aria-hidden="true">
-                <circle className="aaw-trustbadge-track" cx="120" cy="120" r="117" />
-                <circle className="aaw-trustbadge-arc" cx="120" cy="120" r="117" />
-              </svg>
-              <strong>20+</strong>
-            </div>
-            <div className="aaw-trustsplit-copy">
+        {/* 5 — Full-bleed photographic trust band -------------------------- */}
+        {/* Same band as the Tire page, held to the left because this
+            photograph keeps its dark, empty half on that side. */}
+        <section className="aaw-trustband aaw-trustband--maintenance">
+          <div className="aaw-shell aaw-trustband-inner">
+            <div className="aaw-trustband-copy">
+              <div className="aaw-trustbadge" data-reveal="up">
+                {/* Ring draws itself once on reveal, like a loader completing. */}
+                <svg className="aaw-trustbadge-ring" viewBox="0 0 240 240" aria-hidden="true">
+                  <circle className="aaw-trustbadge-track" cx="120" cy="120" r="117" />
+                  <circle className="aaw-trustbadge-arc" cx="120" cy="120" r="117" />
+                </svg>
+                <strong>20+</strong>
+                <span>Years combined experience</span>
+              </div>
               <h2 data-reveal="right" data-reveal-text>
                 Why New England Drivers Trust Us
               </h2>

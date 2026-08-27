@@ -13,7 +13,7 @@
 const LIVE = "https://www.actonautowerks.com";
 
 /** Identifies which page is being rendered, so the active state is per-page. */
-export type PageKey = "tire-wheel" | "maintenance";
+export type PageKey = "tire-wheel" | "maintenance" | "european";
 
 export type NavNode = {
   label: string;
@@ -37,6 +37,7 @@ export type NavNode = {
 export const ROUTES: Record<PageKey, string> = {
   "tire-wheel": "",
   maintenance: "maintenance-service-intervals/",
+  european: "european-car-repair/",
 };
 
 /**
@@ -70,9 +71,13 @@ export const MENU: NavNode[] = [
             internal: true,
             key: "maintenance",
           },
+          {
+            label: "European Car Repair Specialists",
+            internal: true,
+            key: "european",
+          },
           /* Next approved pages join here as each one is built:
-             European Car Repair Specialists, Electrical Systems,
-             Auto Body Services, Transmission Service. */
+             Electrical Systems, Auto Body Services, Transmission Service. */
         ],
       },
       { label: "Performance", href: `${LIVE}/performance/` },
@@ -92,6 +97,7 @@ export const FOOTER_SERVICES: NavNode[] = [
   },
   { label: "Tire & Wheel Service", internal: true, key: "tire-wheel" },
   { label: "Maintenance & Service Intervals", internal: true, key: "maintenance" },
+  { label: "European Car Repair Specialists", internal: true, key: "european" },
   { label: "Performance", href: `${LIVE}/performance/` },
   { label: "Paint Protection Film", href: `${LIVE}/paint-protection-film/` },
   { label: "Ceramic Coating", href: `${LIVE}/ceramic-coating/` },
