@@ -2942,60 +2942,6 @@ h3 {
   }
 }
 
-/* 6 — Photographic pause -------------------------------------------------- */
-
-.aaw-elec-break {
-  position: relative;
-  width: 100%;
-  min-height: 560px;
-  overflow: clip;
-  background-color: var(--aaw-black);
-  background-image: url("/electrical-break.webp");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-/* Readability and grade live here, never baked into the file. */
-.aaw-elec-break::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.42) 0%,
-    rgba(0, 0, 0, 0.12) 45%,
-    rgba(0, 0, 0, 0.5) 100%
-  );
-}
-
-/* The trace crosses the photograph once and stops. */
-.aaw-elec-scan {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    rgba(11, 92, 127, 0) 0%,
-    rgba(120, 205, 245, 0.85) 50%,
-    rgba(11, 92, 127, 0) 100%
-  );
-}
-
-@media (max-width: 1024px) {
-  .aaw-elec-break {
-    min-height: 400px;
-  }
-}
-
-@media (max-width: 767px) {
-  .aaw-elec-break {
-    min-height: 300px;
-  }
-}
-
 /* 7 — Trust --------------------------------------------------------------- */
 
 /* The trust beat is now the page's second photograph, with the copy set into
@@ -3004,7 +2950,9 @@ h3 {
   position: relative;
   display: flex;
   align-items: flex-end;
-  min-height: 660px;
+  /* Tall enough that the photograph still reads above the badge, rather than
+     the composition filling the whole band. */
+  min-height: 780px;
   overflow: clip;
   background-color: var(--aaw-black);
   background-image: url("/electrical-trust.webp");
@@ -3037,8 +2985,16 @@ h3 {
 .aaw-elec-trust-inner {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 20px;
   max-width: 720px;
+}
+
+/* The badge is centred on the other trust bands; here it sits on the copy's
+   own left edge, so its internal centring is dropped. */
+.aaw-elec-trust .aaw-trustbadge {
+  margin-bottom: 10px;
+  text-align: left;
 }
 
 .aaw-elec-trust h2 {
@@ -3054,7 +3010,7 @@ h3 {
 
 @media (max-width: 1024px) {
   .aaw-elec-trust {
-    min-height: 560px;
+    min-height: 620px;
     background-position: center 44%;
   }
 }

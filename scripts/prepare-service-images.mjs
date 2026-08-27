@@ -32,14 +32,6 @@ const JOBS = [
     quality: 86,
   },
   {
-    out: "electrical-break.webp",
-    from: "european-source/bmw-oil-leak.png",
-    /* Inspection lamp over the bay. The drain pan sits below the crop, so this
-       reads as investigation rather than as an oil service. */
-    crop: { left: 0, top: 300, width: 1122, height: 520 },
-    quality: 86,
-  },
-  {
     out: "electrical-intro.webp",
     from: "Electrical Systems Diagnostics_intro.png",
     /* Delivered cut-out at its native 349x262. Capped at that width in CSS so

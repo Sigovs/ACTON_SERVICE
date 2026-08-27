@@ -149,18 +149,26 @@ export default function ElectricalSystemsPage() {
           </div>
         </section>
 
-        {/* 6 — Photographic pause, crossed by the same trace ---------------- */}
-        <section className="aaw-elec-break" aria-hidden="true">
-          <span className="aaw-elec-scan" />
-        </section>
-
-        {/* 7 — Trust -------------------------------------------------------- */}
+        {/* 6 — Trust. This carries the page's photographic pause itself, so
+               the decorative band that used to sit above it is gone — two
+               photographic bands back to back read as one long image. ------ */}
         <section className="aaw-section aaw-elec-trust">
           <div className="aaw-shell">
             {/* Nested rather than sharing the shell element: a max-width on the
                 shell itself would inherit its `margin-inline: auto` and centre
                 the column against the rest of the page's left-aligned rhythm. */}
             <div className="aaw-elec-trust-inner">
+              {/* The shared badge, left aligned with the copy rather than
+                  centred as it is on the Tire and Maintenance bands. Its ring
+                  draws once and flashes as it closes. */}
+              <div className="aaw-trustbadge" data-reveal="up">
+                <svg className="aaw-trustbadge-ring" viewBox="0 0 240 240" aria-hidden="true">
+                  <circle className="aaw-trustbadge-track" cx="120" cy="120" r="117" />
+                  <circle className="aaw-trustbadge-arc" cx="120" cy="120" r="117" />
+                </svg>
+                <strong>20+</strong>
+                <span>Years combined experience</span>
+              </div>
               <h2 data-reveal="left" data-reveal-text>
                 {TRUST.heading}
               </h2>
