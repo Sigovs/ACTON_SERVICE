@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   BurgerIcon,
   CloseIcon,
@@ -11,6 +11,8 @@ import {
   PinIcon,
   SubArrowIcon,
 } from "./icons";
+import { MENU, type NavNode } from "./site-nav";
+import { navLink } from "./site-links";
 
 const CDN = "https://www.actonautowerks.com/wp-content/uploads";
 
@@ -20,63 +22,158 @@ const EMAIL = "service@actonautowerks.com";
 const ADDRESS = "429 Great Rd, Acton, MA 01720, United States";
 const MAPS = "https://maps.app.goo.gl/Rsuie6ei9bPKs1Gm8";
 
-/* The live Acton menu, verbatim. "Services" has no destination of its own —
-   it only opens its submenu, exactly as it does on the site. */
-type NavItem = {
-  label: string;
-  href?: string;
-  ancestor?: boolean;
-  children?: { label: string; href: string; active?: boolean }[];
-};
+/** Flattens a node and its children into the single desktop flyout panel, so
+ *  nesting never becomes a second popup that could shift the header row. */
+function FlyoutItems({ nodes, depth = 0 }: { nodes: NavNode[]; depth?: number }) {
+  return (
+    <>
+      {nodes.map((node) => (
+        <li key={node.label}>
+          <a
+            {...navLink(node)}
+            data-depth={depth}
+            aria-current={node.current ? "page" : undefined}
+          >
+            {node.label}
+          </a>
+          {node.children ? (
+            <ul>
+              <FlyoutItems nodes={node.children} depth={depth + 1} />
+            </ul>
+          ) : null}
+        </li>
+      ))}
+    </>
+  );
+}
 
-const menu: NavItem[] = [
-  { label: "Home", href: "https://www.actonautowerks.com/" },
-  { label: "About Us", href: "https://www.actonautowerks.com/about-us/" },
-  {
-    label: "Services",
-    ancestor: true,
-    children: [
-      {
-        label: "Service & Maintenance",
-        href: "https://www.actonautowerks.com/service-maintenance/",
-        active: true,
-      },
-      { label: "Performance", href: "https://www.actonautowerks.com/performance/" },
-      {
-        label: "Paint Protection Film",
-        href: "https://www.actonautowerks.com/paint-protection-film/",
-      },
-      { label: "Ceramic Coating", href: "https://www.actonautowerks.com/ceramic-coating/" },
-      { label: "Auto Detailing", href: "https://www.actonautowerks.com/auto-detailing/" },
-    ],
-  },
-  { label: "Our Work", href: "https://www.actonautowerks.com/our-work/" },
-];
+/** Mobile accordion, nested to any depth the data describes. */
+function MobileItems({
+  nodes,
+  depth,
+  panelOpen,
+  expanded,
+  toggle,
+}: {
+  nodes: NavNode[];
+  depth: number;
+  panelOpen: boolean;
+  expanded: Record<string, boolean>;
+  toggle: (key: string) => void;
+}) {
+  return (
+    <>
+      {nodes.map((node) => {
+        const reachable = panelOpen && (depth === 0 || expanded[`d${depth - 1}`] !== false);
+
+        if (!node.children) {
+          return (
+            <li key={node.label}>
+              <a
+                {...navLink(node)}
+                data-depth={depth}
+                aria-current={node.current ? "page" : undefined}
+                tabIndex={reachable ? undefined : -1}
+              >
+                {node.label}
+              </a>
+            </li>
+          );
+        }
+
+        const key = node.label;
+        const isOpen = Boolean(expanded[key]);
+        return (
+          <li key={node.label}>
+            <div className="aaw-mobilenav-row" data-depth={depth}>
+              {node.href ? (
+                <a
+                  {...navLink(node)}
+                  data-section={node.ancestor ? "current" : undefined}
+                  aria-current={node.current ? "page" : undefined}
+                  tabIndex={reachable ? undefined : -1}
+                >
+                  {node.label}
+                </a>
+              ) : (
+                <span data-section={node.ancestor ? "current" : undefined}>
+                  {node.label}
+                </span>
+              )}
+              <button
+                type="button"
+                className="aaw-mobilenav-expand"
+                aria-expanded={isOpen}
+                aria-label={`${isOpen ? "Collapse" : "Expand"} ${node.label}`}
+                tabIndex={reachable ? undefined : -1}
+                onClick={() => toggle(key)}
+              >
+                <i className="aaw-sub-arrow" data-expanded={isOpen}>
+                  <SubArrowIcon />
+                </i>
+              </button>
+            </div>
+            <ul className="aaw-mobilenav-sub" data-open={isOpen}>
+              <MobileItems
+                nodes={node.children}
+                depth={depth + 1}
+                panelOpen={panelOpen && isOpen}
+                expanded={expanded}
+                toggle={toggle}
+              />
+            </ul>
+          </li>
+        );
+      })}
+    </>
+  );
+}
 
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [openSub, setOpenSub] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [flyout, setFlyout] = useState<string | null>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const panelId = useId();
 
-  /* Escape closes the panel and hands focus back to the toggle. */
+  const toggleBranch = useCallback((key: string) => {
+    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
+  /* Escape closes whichever surface is open and returns focus sensibly. */
   useEffect(() => {
-    if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key !== "Escape") return;
+      if (flyout) {
+        setFlyout(null);
+        return;
+      }
+      if (open) {
         setOpen(false);
         toggleRef.current?.focus();
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [flyout, open]);
 
-  /* Returning to desktop width leaves no visible toggle, so drop the state. */
+  /* A pointer press outside the desktop nav closes the flyout. */
+  useEffect(() => {
+    if (!flyout) return;
+    const onDown = (event: PointerEvent) => {
+      if (!navRef.current?.contains(event.target as Node)) setFlyout(null);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [flyout]);
+
+  /* Returning to desktop width leaves no visible toggle, so drop that state. */
   useEffect(() => {
     const query = window.matchMedia("(min-width: 1025px)");
     const onChange = () => {
       if (query.matches) setOpen(false);
+      else setFlyout(null);
     };
     query.addEventListener("change", onChange);
     return () => query.removeEventListener("change", onChange);
@@ -142,31 +239,37 @@ export default function SiteHeader() {
             />
           </a>
 
-          <nav className="aaw-nav" aria-label="Primary">
+          <nav className="aaw-nav" aria-label="Primary" ref={navRef}>
             <ul>
-              {menu.map((item) =>
+              {MENU.map((item) =>
                 item.children ? (
-                  <li className="aaw-nav-has-sub" key={item.label}>
-                    <span data-section={item.ancestor ? "current" : undefined}>
+                  <li
+                    className="aaw-nav-has-sub"
+                    key={item.label}
+                    data-open={flyout === item.label}
+                    onMouseEnter={() => setFlyout(item.label)}
+                    onMouseLeave={() => setFlyout(null)}
+                    onFocus={() => setFlyout(item.label)}
+                  >
+                    <button
+                      type="button"
+                      className="aaw-nav-trigger"
+                      data-section={item.ancestor ? "current" : undefined}
+                      aria-expanded={flyout === item.label}
+                      onClick={() =>
+                        setFlyout(flyout === item.label ? null : item.label)
+                      }
+                    >
                       {item.label}
                       <SubArrowIcon />
-                    </span>
+                    </button>
                     <ul className="aaw-subnav">
-                      {item.children.map((child) => (
-                        <li key={child.label}>
-                          <a
-                            href={child.href}
-                            aria-current={child.active ? "page" : undefined}
-                          >
-                            {child.label}
-                          </a>
-                        </li>
-                      ))}
+                      <FlyoutItems nodes={item.children} />
                     </ul>
                   </li>
                 ) : (
                   <li key={item.label}>
-                    <a href={item.href}>{item.label}</a>
+                    <a {...navLink(item)}>{item.label}</a>
                   </li>
                 ),
               )}
@@ -199,49 +302,13 @@ export default function SiteHeader() {
         data-open={open}
       >
         <ul>
-          {menu.map((item) => {
-            if (!item.children) {
-              return (
-                <li key={item.label}>
-                  <a href={item.href} tabIndex={open ? undefined : -1}>
-                    {item.label}
-                  </a>
-                </li>
-              );
-            }
-
-            const expanded = openSub === item.label;
-            return (
-              <li key={item.label}>
-                <button
-                  type="button"
-                  className="aaw-mobilenav-parent"
-                  data-section={item.ancestor ? "current" : undefined}
-                  aria-expanded={expanded}
-                  tabIndex={open ? undefined : -1}
-                  onClick={() => setOpenSub(expanded ? null : item.label)}
-                >
-                  {item.label}
-                  <i className="aaw-sub-arrow" data-expanded={expanded}>
-                    <SubArrowIcon />
-                  </i>
-                </button>
-                <ul className="aaw-mobilenav-sub" data-open={expanded}>
-                  {item.children.map((child) => (
-                    <li key={child.label}>
-                      <a
-                        href={child.href}
-                        aria-current={child.active ? "page" : undefined}
-                        tabIndex={open && expanded ? undefined : -1}
-                      >
-                        {child.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            );
-          })}
+          <MobileItems
+            nodes={MENU}
+            depth={0}
+            panelOpen={open}
+            expanded={expanded}
+            toggle={toggleBranch}
+          />
         </ul>
       </nav>
     </div>

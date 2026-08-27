@@ -22,3 +22,12 @@ type InertProps = { href?: string; "data-inert"?: "true" };
 export function siteLink(href: string): InertProps {
   return LINK_TO_LIVE_SITE ? { href } : { "data-inert": "true" };
 }
+
+/**
+ * Spread onto an `<a>` for a navigation node. Routes inside this build are
+ * always real links; live-site pages stay gated by `LINK_TO_LIVE_SITE`.
+ */
+export function navLink(node: { href?: string; internal?: boolean }): InertProps {
+  if (!node.href) return { "data-inert": "true" };
+  return node.internal ? { href: node.href } : siteLink(node.href);
+}

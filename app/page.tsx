@@ -1,4 +1,8 @@
 import SiteHeader from "./site-header";
+import Reveal from "./reveal";
+import { MaterialSymbol, SYMBOLS } from "./material-symbol";
+import { FOOTER_QUICK_LINKS, FOOTER_SERVICES } from "./site-nav";
+import { navLink } from "./site-links";
 import {
   CheckIcon,
   FacebookIcon,
@@ -19,21 +23,25 @@ const MAPS = "https://maps.app.goo.gl/Rsuie6ei9bPKs1Gm8";
 const services = [
   {
     number: "1.",
+    icon: SYMBOLS.tireReplacement,
     title: "Tire Replacement",
     text: "Summer high-performance, all-season, and winter tires for all cars and trucks, from daily commuters to the European and performance vehicles we specialize in.",
   },
   {
     number: "2.",
+    icon: SYMBOLS.mountingBalancing,
     title: "Tire Mounting And Balancing",
     text: "A proper mount and balance protects ride quality and helps your tires wear evenly, whatever you drive.",
   },
   {
     number: "3.",
+    icon: SYMBOLS.tireRepair,
     title: "Tire Repair",
     text: "Bring your car in and we will look at the damage and give you an honest assessment of what the tire needs.",
   },
   {
     number: "4.",
+    icon: SYMBOLS.wheelAlignment,
     title: "Wheel Alignment",
     text: "A wheel alignment keeps your steering true and can meaningfully extend the life of your tires.",
   },
@@ -42,16 +50,19 @@ const services = [
 const tireTypes = [
   {
     number: "01",
+    icon: SYMBOLS.summer,
     title: "Summer",
     text: "Summer performance tires deliver grip in warm weather.",
   },
   {
     number: "02",
+    icon: SYMBOLS.allSeason,
     title: "All-Season",
     text: "All-seasons balance year-round versatility.",
   },
   {
     number: "03",
+    icon: SYMBOLS.winter,
     title: "Winter",
     text: "Dedicated winter tires give you confidence through New England snow and ice.",
   },
@@ -86,19 +97,6 @@ const faqs = [
   },
 ];
 
-const footerServices = [
-  { label: "Service & Maintenance", href: "https://www.actonautowerks.com/service-maintenance/", current: true },
-  { label: "Performance", href: "https://www.actonautowerks.com/performance/" },
-  { label: "Paint Protection Film", href: "https://www.actonautowerks.com/paint-protection-film/" },
-  { label: "Ceramic Coating", href: "https://www.actonautowerks.com/ceramic-coating/" },
-  { label: "Auto Detailing", href: "https://www.actonautowerks.com/auto-detailing/" },
-];
-
-const footerQuickLinks = [
-  { label: "Home", href: "https://www.actonautowerks.com/" },
-  { label: "About Us", href: "https://www.actonautowerks.com/about-us/" },
-  { label: "Our Work", href: "https://www.actonautowerks.com/our-work/" },
-];
 
 export default function TireAndWheelServicePage() {
   return (
@@ -108,6 +106,7 @@ export default function TireAndWheelServicePage() {
       </a>
 
       <SiteHeader />
+      <Reveal />
 
       <main id="content">
         {/* 1 — Internal page hero ------------------------------------------ */}
@@ -164,7 +163,7 @@ export default function TireAndWheelServicePage() {
                 </a>
               </div>
             </div>
-            <figure className="aaw-split-figure">
+            <figure className="aaw-split-figure" data-reveal="right">
               <img
                 src="/tire-wheel-intro.jpg"
                 alt="Acton Autowerks technician removing a wheel from a Porsche 911 on a lift, with the wheel and tire standing in the foreground."
@@ -180,13 +179,6 @@ export default function TireAndWheelServicePage() {
         <section className="aaw-section aaw-dark">
           <div className="aaw-shell">
             <div className="aaw-head">
-              <img
-                src={`${CDN}/2025/09/breadcrumbs-white-icon.svg`}
-                alt=""
-                width={66}
-                height={47}
-                loading="lazy"
-              />
               <h2>Our Tire And Wheel Services</h2>
               <p>
                 Different driving needs call for different tires. Whatever you
@@ -198,6 +190,7 @@ export default function TireAndWheelServicePage() {
               {services.map((service) => (
                 <article className="aaw-card" key={service.title}>
                   <p className="aaw-card-num">{service.number}</p>
+                  <MaterialSymbol name={service.icon} />
                   <h3>{service.title}</h3>
                   <p>{service.text}</p>
                 </article>
@@ -220,6 +213,7 @@ export default function TireAndWheelServicePage() {
               {tireTypes.map((type) => (
                 <article className="aaw-card" key={type.title}>
                   <p className="aaw-card-num">{type.number}</p>
+                  <MaterialSymbol name={type.icon} />
                   <h3>{type.title}</h3>
                   <p>{type.text}</p>
                 </article>
@@ -260,7 +254,7 @@ export default function TireAndWheelServicePage() {
                 </a>
               </div>
             </div>
-            <figure className="aaw-split-figure">
+            <figure className="aaw-split-figure" data-reveal="left">
               <img
                 src={`${CDN}/2026/06/tire-and-wheel-service-img.webp`}
                 alt="Wheel and tire work underway on a vehicle in the Acton Autowerks shop."
@@ -281,6 +275,7 @@ export default function TireAndWheelServicePage() {
                 <span>Years combined experience</span>
               </div>
               <div className="aaw-trust-copy">
+                <MaterialSymbol name={SYMBOLS.trust} tone="plain" />
                 <h2>Why New England Drivers Trust Us</h2>
                 <p>
                   With over 20 years of combined experience, our team has earned
@@ -309,7 +304,7 @@ export default function TireAndWheelServicePage() {
                 <details key={faq.question} open={index === 0}>
                   <summary>
                     <span>{faq.question}</span>
-                    <i aria-hidden="true" />
+                    <MaterialSymbol name={SYMBOLS.disclosure} />
                   </summary>
                   <p>{faq.answer}</p>
                 </details>
@@ -321,13 +316,6 @@ export default function TireAndWheelServicePage() {
         {/* 8 — CTA band ----------------------------------------------------- */}
         <section className="aaw-section aaw-dark aaw-cta" id="quote">
           <div className="aaw-shell">
-            <img
-              src={`${CDN}/2025/09/breadcrumbs-white-icon.svg`}
-              alt=""
-              width={66}
-              height={47}
-              loading="lazy"
-            />
             <h2>Schedule An Appointment Today</h2>
             <p>
               Whether you are here for a set of tires today or ongoing
@@ -403,9 +391,9 @@ export default function TireAndWheelServicePage() {
           <div className="aaw-footer-col">
             <p className="aaw-footer-title">Services</p>
             <ul className="aaw-footer-links">
-              {footerServices.map((item) => (
+              {FOOTER_SERVICES.map((item) => (
                 <li key={item.label}>
-                  <a href={item.href} aria-current={item.current ? "page" : undefined}>
+                  <a {...navLink(item)} aria-current={item.current ? "page" : undefined}>
                     {item.label}
                   </a>
                 </li>
@@ -416,9 +404,9 @@ export default function TireAndWheelServicePage() {
           <div className="aaw-footer-col">
             <p className="aaw-footer-title">Quick Links</p>
             <ul className="aaw-footer-links">
-              {footerQuickLinks.map((item) => (
+              {FOOTER_QUICK_LINKS.map((item) => (
                 <li key={item.label}>
-                  <a href={item.href}>{item.label}</a>
+                  <a {...navLink(item)}>{item.label}</a>
                 </li>
               ))}
             </ul>

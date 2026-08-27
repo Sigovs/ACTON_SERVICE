@@ -8,14 +8,16 @@
  *
  *   npm run build && node scripts/build-preview.mjs
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
+import net from "node:net";
 import path from "node:path";
 
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist/client");
 const OUT = path.join(ROOT, ".pages");
 const PORT = 4399;
+const WIN = process.platform === "win32";
 
 if (!fs.existsSync(DIST)) {
   console.error("dist/client missing — run `npm run build` first.");
@@ -24,10 +26,29 @@ if (!fs.existsSync(DIST)) {
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function fetchWithRetry(url, tries = 25) {
+/** A leftover server on this port would silently serve a stale build. */
+function portInUse(port) {
+  return new Promise((resolve) => {
+    const probe = net
+      .createServer()
+      .once("error", () => resolve(true))
+      .once("listening", () => probe.close(() => resolve(false)))
+      .listen(port, "127.0.0.1");
+  });
+}
+
+if (await portInUse(PORT)) {
+  console.error(
+    `port ${PORT} is already in use. A stale preview server would serve an ` +
+      `old build — stop it and re-run.`,
+  );
+  process.exit(1);
+}
+
+async function fetchWithRetry(url, tries = 30) {
   for (let i = 0; i < tries; i++) {
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: "no-store" });
       if (res.ok) return await res.text();
     } catch {
       /* server not up yet */
@@ -38,17 +59,26 @@ async function fetchWithRetry(url, tries = 25) {
 }
 
 console.log("starting production server on " + PORT + " …");
+/* Node 24 on Windows refuses to spawn a .cmd shim without a shell, so the
+   launcher is a shell — which means kill() would only reap the shell and
+   leave the server listening. taskkill /T takes the whole tree down. */
 const server = spawn("npx", ["vinext", "start", "--port", String(PORT)], {
   cwd: ROOT,
   shell: true,
   stdio: "ignore",
 });
 
+function stopServer() {
+  if (server.pid == null) return;
+  if (WIN) spawnSync("taskkill", ["/PID", String(server.pid), "/T", "/F"], { stdio: "ignore" });
+  else server.kill("SIGTERM");
+}
+
 let html;
 try {
   html = await fetchWithRetry(`http://localhost:${PORT}/`);
 } finally {
-  server.kill();
+  stopServer();
 }
 
 /* A stale handle on Windows can hold the directory; clear contents instead of
@@ -94,4 +124,24 @@ for (const f of fs.readdirSync(assetsDir)) {
 }
 
 fs.writeFileSync(path.join(OUT, ".nojekyll"), "");
-console.log("snapshot ready in .pages/");
+
+/* Every asset the page asks for must exist, or the snapshot is stale. */
+const referenced = [...html.matchAll(/\.\/assets\/([A-Za-z0-9_-]+\.(?:js|css))/g)].map(
+  (m) => m[1],
+);
+const missing = [...new Set(referenced)].filter(
+  (f) => !fs.existsSync(path.join(assetsDir, f)),
+);
+if (missing.length) {
+  console.error("snapshot is stale — index.html references missing assets:");
+  missing.forEach((f) => console.error("  " + f));
+  process.exit(1);
+}
+
+/* The icon font must survive into the snapshot or every symbol vanishes. */
+if (!html.includes("Material+Symbols+Sharp")) {
+  console.error("snapshot is missing the Material Symbols stylesheet link.");
+  process.exit(1);
+}
+
+console.log(`snapshot ready in .pages/ (${referenced.length} asset refs verified)`);
