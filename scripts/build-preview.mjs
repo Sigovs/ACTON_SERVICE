@@ -88,6 +88,9 @@ const ROUTES = [
     out: "european-car-repair/index.html",
     depth: 1,
   },
+  { route: "/electrical-systems/", out: "electrical-systems/index.html", depth: 1 },
+  { route: "/auto-body/", out: "auto-body/index.html", depth: 1 },
+  { route: "/transmission/", out: "transmission/index.html", depth: 1 },
 ];
 
 const pages = [];

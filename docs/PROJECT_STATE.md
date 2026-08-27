@@ -199,3 +199,125 @@ nothing on its own** — compare child rects against the viewport instead.
 Verified at 1920/1440/1366/1024/768/390: 7 plates, 7 revealed, 7 loaded, no
 failed requests, no console errors, and the stream inside the viewport at
 every width.
+
+## Pages 04-06 complete — the approved six-page set is built (2026-08-27)
+
+### New routes
+
+| Route | Page | Source |
+|---|---|---|
+| `/electrical-systems/` | Electrical Systems Diagnostics & Service in Acton, MA | `docs/content/04-electrical-systems.md` |
+| `/auto-body/` | Auto Body Services in Acton, MA | `docs/content/05-auto-body.md` |
+| `/transmission/` | Transmission Service in Acton, MA | `docs/content/06-transmission.md` |
+
+Each source supplies a single title string, so on all three it is the single
+H1 in the display slot — no second visual title, no invented "in Acton, MA"
+variation. The breadcrumb uses the navigation label, which is wayfinding
+rather than page copy.
+
+### Visual signatures — one per page, deliberately not shared
+
+- **04 Electrical — a diagnostic trace.** One hairline runs the page: it closes
+  the lede, carries the four capabilities as illuminated nodes instead of
+  cards, marks the European-electronics heading, and crosses the photograph
+  once. No fake readouts, no invented codes, no dashboard warnings.
+- **05 Auto Body — panel seams.** Every division is a body-panel shut line: a
+  dark hairline with a lighter one offset beneath. The onsite/partner
+  distinction is the page's first statement at lede size against a teal rule,
+  never small print. Deliberately the only one of the six with no full-bleed
+  photographic band, and the lightest and warmest of the set.
+- **06 Transmission — a shift gate.** The six services step left and right off
+  a central spine, so the eye travels across as well as down. Graphite and
+  steel, one wide underbody pause, no fear language added anywhere.
+
+### Content parity — proved twice
+
+`scripts/extract-service-content.mjs` parses all three sources into typed data
+and fails the build on any token-sequence divergence. Exact results:
+
+| Page | Tokens | Sections | Items | FAQs |
+|---|---|---|---|---|
+| Electrical | 370 | 3 | 4 | 4 |
+| Auto Body | 400 | 4 | 5 | 4 |
+| Transmission | 342 | 3 | 6 | 4 |
+
+The guard was negative-tested against the five failure modes that matter and
+caught every one: a dropped list item, reordered blocks, duplicated CTA copy,
+lost punctuation, and a heading swallowing its paragraph.
+
+Then a second, independent check compares the **rendered DOM** against the
+markdown — 370 / 400 / 342 tokens, identical sequences. Together these prove
+markdown -> data -> pixels with nothing lost, reordered or repeated.
+
+Only proven list syntax is excluded from parity: the `U+25CF` bullet and the
+`U+200B` that follows it, plus the `#####` separator rows.
+
+`app/service-blocks.ts` additionally asserts that each page renders its
+sections in the source's order, so a change to the markdown fails the build
+rather than silently mis-ordering a page.
+
+### Images — all from the existing local set
+
+No image generation is available in this environment, so every image is a
+deliberate crop of a preserved local source, reproducible via
+`scripts/prepare-service-images.mjs`, which records each crop and its reason.
+
+| Output | Source | Note |
+|---|---|---|
+| `electrical-hero.webp` | `european-source/audi-diagnostics.png` | engine bay + cabled diagnostic tablet |
+| `electrical-break.webp` | `european-source/bmw-oil-leak.png` | drain pan cropped out, so it reads as inspection |
+| `autobody-hero.webp` | `european-source/break-workshop.png` | whole car bodies, warm bay, right side clear for copy |
+| `autobody-panel.webp` | `Regular maintenance ….png` | native 977x550, inset rather than stretched |
+| `transmission-hero.webp` | `european-source/mercedes-air-suspension.png` | atmosphere only, behind the 0.7 overlay |
+| `transmission-break.webp` | `european-source/landrover-underbody.png` | the most drivetrain-credible underbody available |
+| `european-intro.webp` | `alignment.jpg` | retires the last labelled PLACEHOLDER on the site |
+
+Nothing is upscaled and no gradient or text is baked in; every readability
+treatment is CSS.
+
+**Replacement candidates, in priority order:**
+
+1. **Transmission** — neither image shows an actual gearbox or clutch. A
+   transmission or clutch on the bench would be a real upgrade.
+2. **Auto Body** — true panel, paint or dent work. The current hero shares its
+   photograph with the European page's break, in a different crop and role.
+3. **European intro** — the photograph the delivery archive was meant to carry.
+   Drop it at `public/european-intro.webp`.
+4. **Electrical** — its two crops share sources with the European Audi and BMW
+   marque plates, again in different crops and roles.
+
+### Navigation
+
+`app/site-nav.ts` is the single source for header flyout, mobile accordion and
+footer. Three entries were added; the Services order is now the approved set:
+Service & Maintenance, Tire & Wheel, Maintenance & Service Intervals, European
+Car Repair Specialists, Electrical Systems Diagnostics & Service, Auto Body
+Services, Transmission Service. No Performance page was created.
+
+One fix the fuller menu forced: with the set complete, the flyout ran past the
+bottom of a short desktop window. `.aaw-subnav` now takes
+`max-height: calc(100vh - 150px)` with `overflow-y: auto`. Row height, header
+alignment and the Services arrow are untouched — the locked metrics still hold.
+
+### QA
+
+All six pages at 1920 / 1440 / 1366 / 1024 / 768 / 390: one H1, no heading-level
+skips, locked shell metrics (utility 41, header 85, logo 98x34, hero 600), all
+images loaded, all reveals fired, no failed requests, no console output.
+
+**Overflow was measured by bounding box, not `scrollWidth`.** The European
+lesson holds: `overflow-x: clip` reports a zero delta while content is clipped
+away. The detector now also distinguishes an `overflow-x: auto` ancestor — a
+scroll container, whose children are reachable — from `clip`/`hidden`, which
+genuinely cuts content off. Result: zero escaping elements on all six pages.
+
+Keyboard: all six service links in the flyout are reachable and fully in view
+at 1366x640, each with a visible white 2px focus ring on the teal panel. The
+live-site rows have no `href` while the preview is scoped, so they are not
+focusable and no one can be stranded below the fold.
+
+Reduced motion: every reveal target shown, nothing left transformed, no
+animation running, full text visible.
+
+Static snapshot: six routes, direct navigation and refresh, real dropdown
+clicks navigating between pages with no `.rsc` failures.
