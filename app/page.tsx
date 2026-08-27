@@ -139,7 +139,7 @@ export default function TireAndWheelServicePage() {
           <div className="aaw-shell aaw-split aaw-split--wideCopy">
             <div className="aaw-split-copy">
               <div className="aaw-head aaw-head--start">
-                <h2>The Only Part Of Your Vehicle That Touches The Road</h2>
+                <h2 data-reveal="left" data-reveal-text>The Only Part Of Your Vehicle That Touches The Road</h2>
               </div>
               <p>
                 Your tires are the only part of your vehicle that actually
@@ -190,7 +190,7 @@ export default function TireAndWheelServicePage() {
           />
           <div className="aaw-shell">
             <div className="aaw-head">
-              <h2>Our Tire And Wheel Services</h2>
+              <h2 data-reveal="left" data-reveal-text>Our Tire And Wheel Services</h2>
               <p>
                 Different driving needs call for different tires. Whatever you
                 drive, a proper mount and balance protects ride quality and
@@ -214,7 +214,7 @@ export default function TireAndWheelServicePage() {
         <section className="aaw-section aaw-pattern aaw-pattern--alt2">
           <div className="aaw-shell">
             <div className="aaw-head">
-              <h2>Summer, All-Season, And Winter Tires</h2>
+              <h2 data-reveal="left" data-reveal-text>Summer, All-Season, And Winter Tires</h2>
               <p>
                 Different driving needs call for different tires. Here is how the
                 three families compare for New England roads.
@@ -238,7 +238,7 @@ export default function TireAndWheelServicePage() {
           <div className="aaw-shell aaw-split aaw-split--reverse">
             <div className="aaw-split-copy">
               <div className="aaw-head aaw-head--start">
-                <h2>Why An Alignment Matters</h2>
+                <h2 data-reveal="right" data-reveal-text>Why An Alignment Matters</h2>
               </div>
               <p>
                 A wheel alignment keeps your steering true and can meaningfully
@@ -287,7 +287,7 @@ export default function TireAndWheelServicePage() {
               </div>
               <div className="aaw-trust-copy">
                 <MaterialSymbol name={SYMBOLS.trust} tone="plain" />
-                <h2>Why New England Drivers Trust Us</h2>
+                <h2 data-reveal="right" data-reveal-text>Why New England Drivers Trust Us</h2>
                 <p>
                   With over 20 years of combined experience, our team has earned
                   a reputation across MetroWest and New England for our
@@ -308,7 +308,7 @@ export default function TireAndWheelServicePage() {
         <section className="aaw-section aaw-pattern aaw-pattern--alt">
           <div className="aaw-shell">
             <div className="aaw-head">
-              <h2>Frequently Asked Questions</h2>
+              <h2 data-reveal="left" data-reveal-text>Frequently Asked Questions</h2>
             </div>
             <div className="aaw-faq">
               {faqs.map((faq, index) => (
@@ -327,7 +327,7 @@ export default function TireAndWheelServicePage() {
         {/* 8 — CTA band ----------------------------------------------------- */}
         <section className="aaw-section aaw-dark aaw-cta" id="quote">
           <div className="aaw-shell">
-            <h2>Schedule An Appointment Today</h2>
+            <h2 data-reveal="left" data-reveal-text>Schedule An Appointment Today</h2>
             <p>
               Whether you are here for a set of tires today or ongoing
               maintenance and service down the road, we will treat your vehicle
