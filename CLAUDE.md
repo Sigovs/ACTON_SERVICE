@@ -95,6 +95,45 @@ footer 56, page 504). Values below are extracted from it.
 - **Footer** — `footer-bg-img.webp` under a 0.9 black overlay, four columns,
   Unbounded 600 16px column titles, teal copyright bar.
 
+## LOCKED shell metrics — do not change
+
+These are measured, not estimated. Every value below was verified with
+Chrome DevTools Protocol against the live pages at an identical viewport, and
+matches on `/service-maintenance/` and `/paint-protection-film/` alike.
+
+**Do not edit any of these. If a change seems necessary, re-measure against
+the live site first and show the numbers.**
+
+| Element | Locked value (@1440) |
+|---|---|
+| Utility bar height | `41px` |
+| Header row height | `85px` |
+| Header block total | `126px` |
+| Logo | `98x34` inside a `143x84` cell, padding `25/35/25/10` |
+| Utility list offset | `margin: 0 -20px` so the first icon sits at x=45 |
+| Nav items | Montserrat `16px/600/28px`, item height 28 |
+| Get A Quote | `174x57`, padding `19px 30px`; `10px 20px` at <=1366 |
+| Hero box | `1440x600`, top 31, `min-height: 600px` |
+| Hero corner | `border-radius: 0 0 250px 0` |
+| Visual page title | Unbounded `60px/700/85px` white, x45 y285 |
+| H1 subtitle | Unbounded `25px/700/45px` `#DEDEDE`, x45 y385 |
+| Breadcrumbs | Montserrat `16px/500/28px` white, x45 y445 |
+| Dropdown panel | `#0B5C7F`, 28px offset |
+| Dropdown links | Montserrat `16px/600` on a **20px** line, padding `14px 21px` -> 48px rows |
+| Section content | `1350px` wide starting at x=45 |
+| Section rhythm | `100 / 70 / 50px` |
+| Footer | padding `100/80`, titles Unbounded `16/28`, links `16/28`, bar `60px`, logo `112x39` |
+
+Responsive steps are the live kit's own and are part of the lock: display
+`60/85` -> `54/75` (<=1366) -> `48/58` (<=1024) -> `30/40` (<=767). A narrower
+window legitimately shows smaller type on both sites — compare like for like
+before calling it a regression.
+
+Two traps already hit here: a `<button>` used for `aria-expanded` does not
+inherit `font-size`, so any new button in the nav must be named in the nav
+typography rule; and dropdown links take Elementor's `20px` nav line-height,
+not the `28px` body line.
+
 ### Contact facts — the only correct values
 
 - `(978) 429-8913`
