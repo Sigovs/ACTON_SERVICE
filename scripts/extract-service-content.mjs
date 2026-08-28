@@ -39,6 +39,18 @@ const ZWSP = /​/g;
 /** Every section heading, declared per page and asserted to appear exactly once. */
 const PAGES = [
   {
+    id: "tireWheel",
+    src: "content/design strat up/docs/content/01-tires-wheels.md",
+    out: "app/tire-wheel-content.ts",
+    headings: [
+      "Our Tire and Wheel Services",
+      "Why an Alignment Matters",
+      "Why New England Drivers Trust Us",
+      "Frequently Asked Questions",
+      "Schedule an Appointment Today",
+    ],
+  },
+  {
     id: "electrical",
     src: "content/design strat up/docs/content/04-electrical-systems.md",
     out: "app/electrical-systems/content.ts",

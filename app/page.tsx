@@ -3,7 +3,9 @@ import SiteHeader from "./site-header";
 import SiteFooter from "./site-footer";
 import Reveal from "./reveal";
 import { MaterialSymbol, SYMBOLS } from "./material-symbol";
-import { CheckIcon, PhoneIcon } from "./icons";
+import { PhoneIcon } from "./icons";
+import { expectBlockCount, paragraph, section } from "./service-blocks";
+import { BLOCKS, CTA_HEADING, CTA_LINES, FAQS, PAGE_TITLE } from "./tire-wheel-content";
 
 export const metadata: Metadata = {
   title: "Tire & Wheel Service in Acton, MA | Acton Autowerks",
@@ -15,87 +17,35 @@ const CDN = "https://www.actonautowerks.com/wp-content/uploads";
 
 const PHONE_DISPLAY = "(978) 429-8913";
 const PHONE_HREF = "tel:+19784298913";
-const EMAIL = "service@actonautowerks.com";
-const ADDRESS = "429 Great Rd, Acton, MA 01720";
-const MAPS = "https://maps.app.goo.gl/Rsuie6ei9bPKs1Gm8";
 
-const services = [
-  {
-    number: "1.",
-    icon: SYMBOLS.tireReplacement,
-    title: "Tire Replacement",
-    text: "Summer high-performance, all-season, and winter tires for all cars and trucks, from daily commuters to the European and performance vehicles we specialize in.",
-  },
-  {
-    number: "2.",
-    icon: SYMBOLS.mountingBalancing,
-    title: "Tire Mounting And Balancing",
-    text: "A proper mount and balance protects ride quality and helps your tires wear evenly, whatever you drive.",
-  },
-  {
-    number: "3.",
-    icon: SYMBOLS.tireRepair,
-    title: "Tire Repair",
-    text: "Bring your car in and we will look at the damage and give you an honest assessment of what the tire needs.",
-  },
-  {
-    number: "4.",
-    icon: SYMBOLS.wheelAlignment,
-    title: "Wheel Alignment",
-    text: "A wheel alignment keeps your steering true and can meaningfully extend the life of your tires.",
-  },
-];
+/* Source order, asserted rather than assumed. */
+expectBlockCount(BLOCKS, 5);
+const INTRO = paragraph(BLOCKS, 0);
+const SERVICES = section(BLOCKS, 1, "Our Tire and Wheel Services");
+const TIRE_TYPES = paragraph(BLOCKS, 2);
+const ALIGNMENT = section(BLOCKS, 3, "Why an Alignment Matters");
+const TRUST = section(BLOCKS, 4, "Why New England Drivers Trust Us");
 
-const tireTypes = [
-  {
-    number: "01",
-    icon: SYMBOLS.summer,
-    title: "Summer",
-    text: "Summer performance tires deliver grip in warm weather.",
-  },
-  {
-    number: "02",
-    icon: SYMBOLS.allSeason,
-    title: "All-Season",
-    text: "All-seasons balance year-round versatility.",
-  },
-  {
-    number: "03",
-    icon: SYMBOLS.winter,
-    title: "Winter",
-    text: "Dedicated winter tires give you confidence through New England snow and ice.",
-  },
-];
+/* One verified Material Symbol per approved service, keyed by the approved
+   wording rather than by position. */
+const SERVICE_ICONS = {
+  "Tire replacement: summer high-performance, all-season, and winter tires":
+    SYMBOLS.tireReplacement,
+  "Tire mounting and balancing": SYMBOLS.mountingBalancing,
+  "Tire repair": SYMBOLS.tireRepair,
+  "Wheel alignment": SYMBOLS.wheelAlignment,
+} as const;
 
-const alignmentSigns = [
-  "Uneven tread wear",
-  "Steering wheel sits off-center",
-  "Car pulling to one side",
-];
-
-const faqs = [
-  {
-    question: "How often should I replace my tires?",
-    answer:
-      "It depends on the tire, your mileage, and your driving conditions, but worn tread, cracking, or vibration are common signs it is time. Bring your car in and we will give you an honest assessment.",
-  },
-  {
-    question: "Do you service run-flat and European performance tires?",
-    answer:
-      "Yes. As European car specialists, we regularly mount and balance run-flats and performance tires for BMW, Mercedes-Benz, Audi, and other makes, using the proper equipment suited to those wheels.",
-  },
-  {
-    question: "How do I know if I need a wheel alignment?",
-    answer:
-      "Uneven tire wear, a crooked steering wheel, or the car drifting to one side on a straight road are the usual indicators. We can check your alignment and show you what we find.",
-  },
-  {
-    question: "Do you rotate tires as part of regular maintenance?",
-    answer:
-      "Yes, tire rotation is part of the routine maintenance and service intervals we recommend to help your tires wear evenly and last longer.",
-  },
-];
-
+function iconFor(item: string) {
+  const icon = SERVICE_ICONS[item as keyof typeof SERVICE_ICONS];
+  if (!icon) {
+    throw new Error(
+      `No icon mapped for the approved service ${JSON.stringify(item)}. ` +
+        `Add a verified Material Symbol to SERVICE_ICONS and to icon_names in layout.tsx.`,
+    );
+  }
+  return icon;
+}
 
 export default function TireAndWheelServicePage() {
   return (
@@ -112,7 +62,7 @@ export default function TireAndWheelServicePage() {
         <section className="aaw-hero">
           <div className="aaw-shell aaw-hero-inner">
             <p className="aaw-hero-title">Tire &amp; Wheel Service</p>
-            <h1>Tire and Wheel Service in Acton, MA</h1>
+            <h1>{PAGE_TITLE}</h1>
             <nav aria-label="Breadcrumb">
               <ol className="aaw-crumbs">
                 <li>
@@ -133,23 +83,13 @@ export default function TireAndWheelServicePage() {
           </div>
         </section>
 
-        {/* 2 — Intro split -------------------------------------------------- */}
+        {/* 2 — Intro split. The source opens straight into this paragraph, so
+               the page does too — it carries no heading of its own. -------- */}
         <section className="aaw-section aaw-pattern">
           <div className="aaw-shell aaw-split aaw-split--wideCopy">
             <div className="aaw-split-copy">
-              <div className="aaw-head aaw-head--start">
-                <h2 data-reveal="left" data-reveal-text>The Only Part Of Your Vehicle That Touches The Road</h2>
-              </div>
-              <p>
-                Your tires are the only part of your vehicle that actually
-                touches the road, so their condition shapes your traction,
-                steering, braking, and fuel economy.
-              </p>
-              <p>
-                At Acton Autowerks, we use state-of-the-art equipment to mount,
-                balance, repair, and align tires on all cars and trucks, from
-                daily commuters to the European and performance vehicles we
-                specialize in.
+              <p className="aaw-lede" data-reveal="up">
+                {INTRO}
               </p>
               <div className="aaw-actions">
                 <a className="aaw-btn" href="#quote">
@@ -174,7 +114,8 @@ export default function TireAndWheelServicePage() {
           </div>
         </section>
 
-        {/* 3 — Primary service list ---------------------------------------- */}
+        {/* 3 — The approved service list. The source gives four labels and no
+               descriptions, so the cards carry the labels alone. ----------- */}
         <section className="aaw-section aaw-dark aaw-dark--wheel">
           {/* Decorative: sits in the left gutter, behind the card grid. */}
           <img
@@ -189,55 +130,38 @@ export default function TireAndWheelServicePage() {
           />
           <div className="aaw-shell">
             <div className="aaw-head">
-              <h2 data-reveal="left" data-reveal-text>Our Tire And Wheel Services</h2>
-              <p>
-                Different driving needs call for different tires. Whatever you
-                drive, a proper mount and balance protects ride quality and
-                helps your tires wear evenly.
-              </p>
+              <h2 data-reveal="left" data-reveal-text>
+                {SERVICES.heading}
+              </h2>
             </div>
             <div className="aaw-grid aaw-grid--2">
-              {services.map((service) => (
-                <article className="aaw-card" key={service.title}>
-                  <p className="aaw-card-num">{service.number}</p>
-                  <MaterialSymbol name={service.icon} />
-                  <h3>{service.title}</h3>
-                  <p>{service.text}</p>
+              {SERVICES.items.map((item, index) => (
+                <article className="aaw-card aaw-card--label" key={item}>
+                  <p className="aaw-card-num" aria-hidden="true">{index + 1}.</p>
+                  <MaterialSymbol name={iconFor(item)} />
+                  <h3>{item}</h3>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* 4 — Seasonal tire education -------------------------------------- */}
+        {/* 4 — Seasonal guidance. One approved paragraph, kept whole rather
+               than split into cards. -------------------------------------- */}
         <section className="aaw-section aaw-pattern aaw-pattern--alt2">
-          <div className="aaw-shell">
-            <div className="aaw-head">
-              <img
-                className="aaw-seasons-figure"
-                src="/seasonal-tires.webp"
-                alt="Three stacked tires showing different tread patterns."
-                width={536}
-                height={433}
-                loading="lazy"
-                data-reveal="up"
-              />
-              <h2 data-reveal="left" data-reveal-text>Summer, All-Season, And Winter Tires</h2>
-              <p>
-                Different driving needs call for different tires. Here is how the
-                three families compare for New England roads.
-              </p>
-            </div>
-            <div className="aaw-grid aaw-grid--3">
-              {tireTypes.map((type) => (
-                <article className="aaw-card" key={type.title}>
-                  <p className="aaw-card-num">{type.number}</p>
-                  <MaterialSymbol name={type.icon} />
-                  <h3>{type.title}</h3>
-                  <p>{type.text}</p>
-                </article>
-              ))}
-            </div>
+          <div className="aaw-shell aaw-seasons">
+            <img
+              className="aaw-seasons-figure"
+              src="/seasonal-tires.webp"
+              alt="Three stacked tires showing different tread patterns."
+              width={536}
+              height={433}
+              loading="lazy"
+              data-reveal="up"
+            />
+            <p data-reveal="up" data-reveal-delay="1">
+              {TIRE_TYPES}
+            </p>
           </div>
         </section>
 
@@ -246,22 +170,15 @@ export default function TireAndWheelServicePage() {
           <div className="aaw-shell aaw-split">
             <div className="aaw-split-copy">
               <div className="aaw-head aaw-head--start">
-                <h2 data-reveal="left" data-reveal-text>Why An Alignment Matters</h2>
+                <h2 data-reveal="left" data-reveal-text>
+                  {ALIGNMENT.heading}
+                </h2>
               </div>
-              <p>
-                A wheel alignment keeps your steering true and can meaningfully
-                extend the life of your tires. If you notice any of the
-                following, it may be time to have your alignment checked.
-              </p>
-              <ul className="aaw-symptoms">
-                {alignmentSigns.map((sign) => (
-                  <li key={sign}>{sign}</li>
-                ))}
-              </ul>
-              <p>
-                We will inspect it and let you know honestly whether it needs
-                attention, with no upselling.
-              </p>
+              {ALIGNMENT.paragraphs.map((text) => (
+                <p key={text.slice(0, 40)} data-reveal="up">
+                  {text}
+                </p>
+              ))}
               <div className="aaw-actions">
                 <a className="aaw-btn" href="#quote">
                   Get A Quote
@@ -301,17 +218,16 @@ export default function TireAndWheelServicePage() {
                 <strong>20+</strong>
                 <span>Years combined experience</span>
               </div>
-              <h2 data-reveal="up">Why New England Drivers Trust Us</h2>
-              <p data-reveal="up" data-reveal-delay="1">
-                With over 20 years of combined experience, our team has earned a
-                reputation across MetroWest and New England for our expertise
-                with European vehicles, straightforward advice and quality work.
-              </p>
-              <p data-reveal="up" data-reveal-delay="2">
-                Whether you’re here for a set of tires today or ongoing
-                maintenance and service down the road, we’ll treat your vehicle
-                like our own.
-              </p>
+              <h2 data-reveal="up">{TRUST.heading}</h2>
+              {TRUST.paragraphs.map((text, index) => (
+                <p
+                  key={text.slice(0, 40)}
+                  data-reveal="up"
+                  data-reveal-delay={String(Math.min(index + 1, 2))}
+                >
+                  {text}
+                </p>
+              ))}
             </div>
           </div>
         </section>
@@ -320,10 +236,12 @@ export default function TireAndWheelServicePage() {
         <section className="aaw-section aaw-pattern aaw-pattern--alt">
           <div className="aaw-shell">
             <div className="aaw-head">
-              <h2 data-reveal="left" data-reveal-text>Frequently Asked Questions</h2>
+              <h2 data-reveal="left" data-reveal-text>
+                Frequently Asked Questions
+              </h2>
             </div>
             <div className="aaw-faq">
-              {faqs.map((faq, index) => (
+              {FAQS.map((faq, index) => (
                 <details key={faq.question} open={index === 0}>
                   <summary>
                     <span>{faq.question}</span>
@@ -336,38 +254,17 @@ export default function TireAndWheelServicePage() {
           </div>
         </section>
 
-        {/* 8 — CTA band ----------------------------------------------------- */}
+        {/* 8 — CTA. The source supplies a heading and a phone line only. ---- */}
         <section className="aaw-section aaw-dark aaw-cta" id="quote">
           <div className="aaw-shell">
-            <h2 data-reveal="left" data-reveal-text>Schedule An Appointment Today</h2>
-            <p>
-              Whether you are here for a set of tires today or ongoing
-              maintenance and service down the road, we will treat your vehicle
-              like our own.
-            </p>
-            <ul className="aaw-checklist">
-              <li>
-                <CheckIcon />
-                Over 20 years of combined experience
-              </li>
-              <li>
-                <CheckIcon />
-                European and performance vehicle specialists
-              </li>
-              <li>
-                <CheckIcon />
-                Honest assessments, no upselling
-              </li>
-            </ul>
+            <h2 data-reveal="up">{CTA_HEADING}</h2>
             <div className="aaw-actions">
-              <a className="aaw-btn aaw-btn--onDark" href={PHONE_HREF}>
-                Get A Quote
-              </a>
-              <span className="aaw-or aaw-or--onDark">or</span>
-              <a className="aaw-callbtn aaw-callbtn--onDark" href={PHONE_HREF}>
-                <PhoneIcon size={18} />
-                {PHONE_DISPLAY}
-              </a>
+              {CTA_LINES.map((line) => (
+                <a key={line} className="aaw-callbtn aaw-callbtn--onDark" href={PHONE_HREF}>
+                  <PhoneIcon size={18} />
+                  {line}
+                </a>
+              ))}
             </div>
           </div>
         </section>

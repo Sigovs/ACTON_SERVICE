@@ -3679,3 +3679,58 @@ h3 {
   }
 }
 
+
+/* Tire & Wheel — copy-faithful adjustments -------------------------------
+   The approved source gives four service labels and no descriptions, and one
+   seasonal paragraph rather than three comparison cards. These two rules let
+   the existing card and section language carry that without inventing text. */
+
+/* A card with a label and no body: the label becomes the card's subject. */
+.aaw-card--label {
+  padding-bottom: 34px;
+}
+
+.aaw-card--label h3 {
+  margin-bottom: 0;
+  max-width: 22ch;
+}
+
+/* The page's opening paragraph, set a step up from body copy. */
+.aaw-lede {
+  max-width: 62ch;
+  color: #333333;
+  font-size: 18px;
+  line-height: 32px;
+}
+
+/* Seasonal guidance: the cut-out above one centred paragraph. */
+.aaw-seasons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.aaw-seasons p {
+  max-width: 74ch;
+  font-size: 17px;
+  line-height: 31px;
+}
+
+@media (max-width: 767px) {
+  .aaw-lede {
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .aaw-seasons {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .aaw-seasons p {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}
