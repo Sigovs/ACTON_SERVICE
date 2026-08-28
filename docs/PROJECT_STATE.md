@@ -321,3 +321,63 @@ animation running, full text visible.
 
 Static snapshot: six routes, direct navigation and refresh, real dropdown
 clicks navigating between pages with no `.rsc` failures.
+
+## Content verified against the approval PDF, and Tire rebuilt (2026-08-27)
+
+### The source question, settled
+
+The approval PDF governs all six pages. It is in the repository twice,
+byte-identical (MD5 `ed4622c5a7c24b7ce46ac1fd8bba2067`):
+`content/new content August 2026/Copy of … for Approval.docx.pdf` and
+`content/design strat up/docs/source/Acton-Auto-Werks-…-for-Review.pdf`.
+
+Verified with `pdftotext` in both directions: all six `docs/content/0X-*.md`
+files are contained in the PDF verbatim, and every sentence of the PDF's 04-06
+sections appears in the markdown. All fifteen service labels match exactly.
+
+### Two documents that had drifted
+
+**`CONTENT_MAP.md`** — our own planning file, corrected. It promised Auto Body
+"insurance coordination" and "touch-up, detail, ceramic coating, tint,
+protective film" — none of which appear anywhere in the approved source, and two
+of which are separate services on the live site — while omitting four that are
+approved. Its Transmission entry promised a "flush" and "fluid discoloration".
+Had the page been built from it, Auto Body would have advertised work the client
+never approved.
+
+**The Tire & Wheel page** — rebuilt. Hand-typed before the parity tooling
+existed, it carried only 10 of its 23 approved elements. Maintenance, checked
+the same way, was 27 of 27.
+
+Removed, none of it in the approved document: the heading "The Only Part Of Your
+Vehicle That Touches The Road"; four invented card descriptions, one of which
+moved an FAQ answer about tire replacement onto the tire repair card; the
+section "Summer, All-Season, And Winter Tires" and its lede, built by splitting
+one approved sentence into three card fragments; three reworded alignment
+"signs"; and a CTA paragraph repeating the trust copy plus a three-item
+checklist.
+
+Restored: heading capitalisation, the expanded contractions, the four service
+labels, the seasonal paragraph whole, the alignment paragraph as prose, and the
+CTA as the approved heading and phone line.
+
+The page now renders from a generated module like the others. Parity: 417
+tokens from extraction, the same 417 from the rendered DOM, and 23 of 23
+approved elements present verbatim.
+
+**Consequence worth knowing:** Tire is visually leaner than before — the three
+seasonal cards, the signs list and the CTA checklist are gone. That was invented
+filler; it was not replaced with new invention. Adding volume back has to go
+through the client and into the approved text.
+
+### Checking a page means two questions
+
+Passing one does not imply the other:
+
+- **parity** — does the rendered copy match the source in order? Catches
+  reordering, duplication, lost punctuation.
+- **audit** — is every source element present at all? Parity cannot tell you
+  that a whole block never reached the page.
+
+Both are now run for pages 01 and 04-06. Maintenance (02) and European (03) are
+covered by audit and extraction parity respectively.
